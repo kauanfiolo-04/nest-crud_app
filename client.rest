@@ -15,8 +15,8 @@ POST {{baseUrl}}/recados/
 Content-Type: application/json
 
 {
-  "texto": "NOVO recado de teste",
-  "de": "Joana",
+  "texto": "NOvo texto",
+  "de": "Jonas",
   "para": "João",
   "lido": false,
   "data": "2025-12-23T19:35:31.883Z"

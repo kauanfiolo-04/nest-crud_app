@@ -6,5 +6,3 @@ export interface Recado {
   lido: boolean;
   data: Date;
 }
-
-export type RecadoDto = Readonly<Pick<Recado, 'texto' | 'de' | 'para'>>;

@@ -1,7 +1,3 @@
-import { RecadoDto } from '../entities/recado.entity';
+import { RecadoDto } from '../entities/dto.entity';
 
-export class CreateRecadoDto implements RecadoDto {
-  texto: string;
-  de: string;
-  para: string;
-}
+export class CreateRecadoDto extends RecadoDto {}
