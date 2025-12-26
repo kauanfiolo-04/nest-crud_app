@@ -1,5 +1,5 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { RecadoDto } from '../entities/dto.entity';
+import { RecadoDto } from './recado.dto';
 import { IsBoolean, IsOptional } from 'class-validator';
 
 export class UpdateRecadoDto extends PartialType(RecadoDto) {

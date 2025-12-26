@@ -1,4 +1,4 @@
-import { Recado } from './recado.entity';
+import { Recado } from '../entities/recado.entity';
 import { IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
 
 type RecadoProps = Pick<Recado, 'texto' | 'de' | 'para'>;
