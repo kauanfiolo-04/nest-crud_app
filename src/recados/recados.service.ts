@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Recado } from './entities/recado.entity';
 import { CreateRecadoDto } from './dto/create-recado.dto';
@@ -13,18 +11,6 @@ export class RecadosService {
     @InjectRepository(Recado)
     private readonly recadoRepository: Repository<Recado>
   ) {}
-
-  private lastId = 1;
-  private recados: Recado[] = [
-    {
-      id: 1,
-      texto: 'Este é um recado de teste',
-      de: 'Joana',
-      para: 'João',
-      lido: false,
-      data: new Date()
-    }
-  ];
 
   throwNotFoundException() {
     throw new NotFoundException('Recado não econtrado');
@@ -59,9 +45,14 @@ export class RecadosService {
   }
 
   async update(id: number, updateRecadoDto: UpdateRecadoDto) {
+    const partialUpdateRecadoDto = {
+      lido: updateRecadoDto.lido,
+      texto: updateRecadoDto.texto
+    };
+
     const recado = await this.recadoRepository.preload({
       id,
-      ...updateRecadoDto
+      ...partialUpdateRecadoDto
     });
 
     if (!recado) this.throwNotFoundException();

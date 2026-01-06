@@ -27,7 +27,7 @@ Content-Type: application/json
 
 {
   "texto": "ATUALIZAR O RECADO 3",
-  "lido": false,
+  "lido": true
 }
 ###
 
