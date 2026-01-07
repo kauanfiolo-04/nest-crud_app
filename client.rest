@@ -34,3 +34,43 @@ Content-Type: application/json
 ###
 DELETE  {{baseUrl}}/recados/2
 ###
+
+
+
+
+
+
+# Pessoas
+
+###
+GET {{baseUrl}}/pessoas/?limit=10&offset=12
+###
+
+###
+GET {{baseUrl}}/pessoas/2/
+###
+
+###
+POST {{baseUrl}}/pessoas/
+Content-Type: application/json
+
+{
+  "email": "email@email.com",
+  "nome": "kauan",
+  "password": "123456"
+}
+###
+
+###
+PATCH {{baseUrl}}/pessoas/3
+Content-Type: application/json
+
+{
+  "texto": "ATUALIZAR O RECADO 3",
+  "lido": true
+}
+###
+
+###
+DELETE  {{baseUrl}}/pessoas/1
+###

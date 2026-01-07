@@ -7,7 +7,7 @@ export class Pessoa {
   id: number;
 
   @IsEmail()
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @Column({ length: 255 })

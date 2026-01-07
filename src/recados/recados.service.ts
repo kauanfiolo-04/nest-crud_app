@@ -32,7 +32,7 @@ export class RecadosService {
     return recado;
   }
 
-  create(createRecadoDto: CreateRecadoDto) {
+  async create(createRecadoDto: CreateRecadoDto) {
     const novoRecado: Omit<Recado, 'id'> = {
       ...createRecadoDto,
       lido: false,
@@ -41,7 +41,7 @@ export class RecadosService {
 
     const recado = this.recadoRepository.create(novoRecado);
 
-    return this.recadoRepository.save(recado);
+    return await this.recadoRepository.save(recado);
   }
 
   async update(id: number, updateRecadoDto: UpdateRecadoDto) {
