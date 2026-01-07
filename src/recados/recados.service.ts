@@ -12,7 +12,7 @@ export class RecadosService {
     private readonly recadoRepository: Repository<Recado>
   ) {}
 
-  throwNotFoundException() {
+  throwNotFoundException(): never {
     throw new NotFoundException('Recado não econtrado');
   }
 
@@ -57,7 +57,7 @@ export class RecadosService {
 
     if (!recado) this.throwNotFoundException();
 
-    await this.recadoRepository.save(recado!);
+    await this.recadoRepository.save(recado);
 
     return recado;
   }
@@ -67,6 +67,6 @@ export class RecadosService {
 
     if (!recado) this.throwNotFoundException();
 
-    return this.recadoRepository.remove(recado!);
+    return this.recadoRepository.remove(recado);
   }
 }

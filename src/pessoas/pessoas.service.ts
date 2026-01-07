@@ -13,6 +13,10 @@ export class PessoasService {
     private readonly pessoaRepository: Repository<Pessoa>
   ) {}
 
+  throwNotFoundException(): never {
+    throw new NotFoundException('Pessoa não econtrada');
+  }
+
   async create(createPessoaDto: CreatePessoaDto) {
     try {
       const pessoaDados = {
@@ -43,20 +47,34 @@ export class PessoasService {
     return pessoas;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} pessoa`;
+  async findOne(id: number) {
+    const pessoa = await this.pessoaRepository.findOneBy({ id });
+
+    if (!pessoa) this.throwNotFoundException();
+
+    return pessoa;
   }
 
-  update(id: number, updatePessoaDto: UpdatePessoaDto) {
-    return `This action updates a #${id} pessoa`;
+  async update(id: number, updatePessoaDto: UpdatePessoaDto) {
+    const dadosPessoa = {
+      nome: updatePessoaDto.nome,
+      passwordHash: updatePessoaDto.password
+    };
+
+    const pessoa = await this.pessoaRepository.preload({
+      id,
+      ...dadosPessoa
+    });
+
+    if (!pessoa) this.throwNotFoundException();
+
+    return await this.pessoaRepository.save(pessoa);
   }
 
   async remove(id: number) {
     const pessoa = await this.pessoaRepository.findOneBy({ id });
 
-    if (!pessoa) {
-      throw new NotFoundException('Pessoa não encontrada');
-    }
+    if (!pessoa) this.throwNotFoundException();
 
     return await this.pessoaRepository.remove(pessoa);
   }
