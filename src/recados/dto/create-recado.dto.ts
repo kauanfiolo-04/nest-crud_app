@@ -1,3 +1,14 @@
-import { RecadoDto } from './recado.dto';
+import { IsNotEmpty, IsPositive, IsString, MaxLength, MinLength } from 'class-validator';
+export class CreateRecadoDto {
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(5)
+  @MaxLength(255)
+  readonly texto: string;
 
-export class CreateRecadoDto extends RecadoDto {}
+  @IsPositive()
+  readonly deId: number;
+
+  @IsPositive()
+  readonly paraId: number;
+}

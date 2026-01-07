@@ -7,7 +7,7 @@ GET {{baseUrl}}/recados/?limit=10&offset=12
 ###
 
 ###
-GET {{baseUrl}}/recados/2/
+GET {{baseUrl}}/recados/4/
 ###
 
 ###
@@ -15,9 +15,9 @@ POST {{baseUrl}}/recados/
 Content-Type: application/json
 
 {
-  "texto": "o texto",
-  "de": "Jonas",
-  "para": "João"
+  "texto": "Recado",
+  "deId": 7,
+  "paraId": 8
 }
 ###
 
@@ -55,7 +55,7 @@ POST {{baseUrl}}/pessoas/
 Content-Type: application/json
 
 {
-  "email": "email@email.com",
+  "email": "email@email2.com",
   "nome": "kauan",
   "password": "123456"
 }
