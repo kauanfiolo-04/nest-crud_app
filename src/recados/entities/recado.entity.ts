@@ -1,4 +1,13 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn
+} from 'typeorm';
+import { Pessoa } from '../../pessoas/entities/pessoa.entity';
 
 @Entity()
 export class Recado {
@@ -8,11 +17,17 @@ export class Recado {
   @Column({ type: 'varchar', length: 255 })
   texto: string;
 
-  @Column({ type: 'varchar', length: 255 })
-  de: string;
+  // Muitos recados podem ser enviados por uma unica poessoa (emissor)
+  @ManyToOne(() => Pessoa)
+  // Especifica a coluna "de" que armazena o ID da pessoa que enviou o recado
+  @JoinColumn({ name: 'de' })
+  de: Pessoa;
 
-  @Column({ type: 'varchar', length: 255 })
-  para: string;
+  // Muitos recados podem ser enviados para uma unica poessoa (destinatario)
+  @ManyToOne(() => Pessoa)
+  // Especifica a coluna "para" que armazena o ID da pessoa que recebe o recado
+  @JoinColumn({ name: 'para' })
+  para: Pessoa;
 
   @Column({ default: false })
   lido: boolean;

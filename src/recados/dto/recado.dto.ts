@@ -1,3 +1,4 @@
+import { Pessoa } from '../../pessoas/entities/pessoa.entity';
 import { Recado } from '../entities/recado.entity';
 import { IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
 
@@ -14,11 +15,11 @@ export class RecadoDto implements RecadoProps {
   @IsNotEmpty()
   @MinLength(2)
   @MaxLength(50)
-  readonly de: string;
+  readonly de: Pessoa;
 
   @IsString()
   @IsNotEmpty()
   @MinLength(2)
   @MaxLength(50)
-  readonly para: string;
+  readonly para: Pessoa;
 }
