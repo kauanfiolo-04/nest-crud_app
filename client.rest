@@ -3,7 +3,7 @@
 # RECADOS
 
 ###
-GET {{baseUrl}}/recados/?limit=10&offset=12
+GET {{baseUrl}}/recados/?limit=10&offset=0
 ###
 
 ###
@@ -15,7 +15,7 @@ POST {{baseUrl}}/recados/
 Content-Type: application/json
 
 {
-  "texto": "De Kauan para NAUAK",
+  "texto": "Recado",
   "deId": 8,
   "paraId": 9
 }
@@ -27,7 +27,7 @@ Content-Type: application/json
 
 {
   "texto": "ATUALIZAR O RECADO 6",
-  "lido": true
+  "lido": false
 }
 ###
 

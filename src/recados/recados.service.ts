@@ -5,6 +5,7 @@ import { UpdateRecadoDto } from './dto/update-recado.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PessoasService } from '../pessoas/pessoas.service';
+import { PaginationDTO } from '../common/dto/pagination.dto';
 
 @Injectable()
 export class RecadosService {
@@ -18,8 +19,10 @@ export class RecadosService {
     throw new NotFoundException('Recado não econtrado');
   }
 
-  async findAll() {
+  async findAll(paginationDto?: PaginationDTO) {
     const recados = await this.recadoRepository.find({
+      take: paginationDto?.limit ?? 10,
+      skip: paginationDto?.offset ?? 0,
       relations: ['de', 'para'],
       order: {
         id: 'desc'

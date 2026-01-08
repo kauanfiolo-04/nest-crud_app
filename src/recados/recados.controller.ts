@@ -4,6 +4,7 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query 
 import { RecadosService } from './recados.service';
 import { CreateRecadoDto } from './dto/create-recado.dto';
 import { UpdateRecadoDto } from './dto/update-recado.dto';
+import { PaginationDTO } from '../common/dto/pagination.dto';
 
 // DTO - Data Transfer Object
 // DTO -> Simple Object -> Validate data / Transform data
@@ -13,12 +14,8 @@ export class RecadosController {
   constructor(private readonly recadosService: RecadosService) {}
 
   @Get()
-  findAll(@Query() pagination: Record<string, number>) {
-    // const { limit = 10, offset = 10 } = pagination;
-
-    // return `Retorna todos os recados. Limit=${limit}, Offset=${offset}.`;
-
-    return this.recadosService.findAll();
+  findAll(@Query() paginationDto: PaginationDTO) {
+    return this.recadosService.findAll(paginationDto);
   }
 
   @Get(':id')
