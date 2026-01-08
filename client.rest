@@ -15,18 +15,18 @@ POST {{baseUrl}}/recados/
 Content-Type: application/json
 
 {
-  "texto": "Recado",
-  "deId": 7,
-  "paraId": 8
+  "texto": "De Kauan para NAUAK",
+  "deId": 8,
+  "paraId": 9
 }
 ###
 
 ###
-PATCH {{baseUrl}}/recados/3
+PATCH {{baseUrl}}/recados/6
 Content-Type: application/json
 
 {
-  "texto": "ATUALIZAR O RECADO 3",
+  "texto": "ATUALIZAR O RECADO 6",
   "lido": true
 }
 ###
@@ -55,8 +55,8 @@ POST {{baseUrl}}/pessoas/
 Content-Type: application/json
 
 {
-  "email": "email@email2.com",
-  "nome": "kauan",
+  "email": "email@email3.com",
+  "nome": "NAUAK",
   "password": "123456"
 }
 ###
