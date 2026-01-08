@@ -72,5 +72,5 @@ Content-Type: application/json
 ###
 
 ###
-DELETE  {{baseUrl}}/pessoas/1
+DELETE  {{baseUrl}}/pessoas/7
 ###
