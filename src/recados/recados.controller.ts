@@ -6,6 +6,7 @@ import { CreateRecadoDto } from './dto/create-recado.dto';
 import { UpdateRecadoDto } from './dto/update-recado.dto';
 import { PaginationDTO } from '../common/dto/pagination.dto';
 import { TimingConnectionInterceptor } from '../common/interceptors/timing-connection.interceptor';
+import { ErrorHandlingInterceptor } from '../common/interceptors/error-handling.interceptor';
 
 // DTO - Data Transfer Object
 // DTO -> Simple Object -> Validate data / Transform data
@@ -22,6 +23,7 @@ export class RecadosController {
   }
 
   @Get(':id')
+  @UseInterceptors(TimingConnectionInterceptor, ErrorHandlingInterceptor)
   findOne(@Param('id') id: number) {
     return this.recadosService.findOne(id);
   }
