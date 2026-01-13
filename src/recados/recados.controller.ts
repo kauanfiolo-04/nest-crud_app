@@ -5,10 +5,12 @@ import { RecadosService } from './recados.service';
 import { CreateRecadoDto } from './dto/create-recado.dto';
 import { UpdateRecadoDto } from './dto/update-recado.dto';
 import { PaginationDTO } from '../common/dto/pagination.dto';
+import { AuthTokenInterceptor } from '../common/interceptors/auth-token.inteceptor';
 
 // DTO - Data Transfer Object
 // DTO -> Simple Object -> Validate data / Transform data
 
+@UseInterceptors(AuthTokenInterceptor)
 @Controller('recados')
 export class RecadosController {
   constructor(private readonly recadosService: RecadosService) {}

@@ -4,6 +4,7 @@
 
 ###
 GET {{baseUrl}}/recados/?limit=10&offset=0
+Authorization: Bearer 123456
 ###
 
 ###
