@@ -7,23 +7,21 @@ import { UpdateRecadoDto } from './dto/update-recado.dto';
 import { PaginationDTO } from '../common/dto/pagination.dto';
 import { TimingConnectionInterceptor } from '../common/interceptors/timing-connection.interceptor';
 import { ErrorHandlingInterceptor } from '../common/interceptors/error-handling.interceptor';
+import { SimpleCacheInterceptor } from '../common/interceptors/simple-cache.interceptor';
 
 // DTO - Data Transfer Object
 // DTO -> Simple Object -> Validate data / Transform data
 
 @Controller('recados')
-// @UsePipes(ParseIntIdPipe) poderia ser usado no controller
 export class RecadosController {
   constructor(private readonly recadosService: RecadosService) {}
 
   @Get()
-  @UseInterceptors(TimingConnectionInterceptor)
   findAll(@Query() paginationDto: PaginationDTO) {
     return this.recadosService.findAll(paginationDto);
   }
 
   @Get(':id')
-  @UseInterceptors(TimingConnectionInterceptor, ErrorHandlingInterceptor)
   findOne(@Param('id') id: number) {
     return this.recadosService.findOne(id);
   }
