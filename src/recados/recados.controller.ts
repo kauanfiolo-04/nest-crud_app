@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Req, UseInterceptors } from '@nestjs/common';
 import { RecadosService } from './recados.service';
 import { CreateRecadoDto } from './dto/create-recado.dto';
 import { UpdateRecadoDto } from './dto/update-recado.dto';
 import { PaginationDTO } from '../common/dto/pagination.dto';
 import { AuthTokenInterceptor } from '../common/interceptors/auth-token.inteceptor';
+import type { Request } from 'express';
 
 // DTO - Data Transfer Object
 // DTO -> Simple Object -> Validate data / Transform data
@@ -16,7 +17,9 @@ export class RecadosController {
   constructor(private readonly recadosService: RecadosService) {}
 
   @Get()
-  findAll(@Query() paginationDto: PaginationDTO) {
+  findAll(@Query() paginationDto: PaginationDTO, @Req() req: Request) {
+    console.log('RecadosController: ', req['user']);
+
     return this.recadosService.findAll(paginationDto);
   }
 
