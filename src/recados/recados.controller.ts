@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Req, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Patch, Post, Query, Req, UseInterceptors } from '@nestjs/common';
 import { RecadosService } from './recados.service';
 import { CreateRecadoDto } from './dto/create-recado.dto';
 import { UpdateRecadoDto } from './dto/update-recado.dto';
@@ -19,6 +19,8 @@ export class RecadosController {
   @Get()
   findAll(@Query() paginationDto: PaginationDTO, @Req() req: Request) {
     console.log('RecadosController: ', req['user']);
+
+    throw new Error('Erro padrao TS do tipo never');
 
     return this.recadosService.findAll(paginationDto);
   }
