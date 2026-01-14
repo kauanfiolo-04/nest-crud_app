@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { ParseIntIdPipe } from './common/pipes/parse-int-id.pipe';
+import { IsAdminGuard } from './common/guards/is-admin.guard';
 // import { MyExceptionFilter } from './common/filters/my-exception.filter';
 
 async function bootstrap() {
@@ -16,7 +17,7 @@ async function bootstrap() {
     new ParseIntIdPipe()
   );
 
-  // app.useGlobalFilters(new MyExceptionFilter());
+  // app.useGlobalFilters(new MyExceptionFilter()); perde o DI
 
   await app.listen(process.env.PORT ?? 3000);
 }

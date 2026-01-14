@@ -12,9 +12,12 @@ export class SimpleMiddleware implements NestMiddleware {
     if (authorization) {
       req['user'] = {
         nome: 'Kauan',
-        sobrenome: 'Fiolo'
+        sobrenome: 'Fiolo',
+        role: 'admin'
       };
     }
+
+    console.log(req);
 
     res.setHeader('CABECALHO', 'Do Middleware');
 
