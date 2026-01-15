@@ -3,9 +3,6 @@ import { RecadosService } from './recados.service';
 import { CreateRecadoDto } from './dto/create-recado.dto';
 import { UpdateRecadoDto } from './dto/update-recado.dto';
 import { PaginationDTO } from '../common/dto/pagination.dto';
-import type { Request } from 'express';
-import { UrlParam } from '../common/params/url-param.decorator';
-import { ReqDataParam } from '../common/params/req-data-param.decotator';
 
 // DTO - Data Transfer Object
 // DTO -> Simple Object -> Validate data / Transform data
