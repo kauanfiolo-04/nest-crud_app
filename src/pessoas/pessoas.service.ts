@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePessoaDto } from './dto/create-pessoa.dto';
 import { UpdatePessoaDto } from './dto/update-pessoa.dto';
@@ -31,7 +30,8 @@ export class PessoasService {
 
       return novaPessoa;
     } catch (error) {
-      if (error.code === '23505') {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      if (error?.code === '23505') {
         throw new ConflictException('Email já cadastrado');
       }
 

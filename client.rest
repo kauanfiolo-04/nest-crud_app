@@ -16,24 +16,24 @@ POST {{baseUrl}}/recados/
 Content-Type: application/json
 
 {
-  "texto": "Recado AAAA",
+  "texto": "Recado Novo",
   "deId": 8,
   "paraId": 9
 }
 ###
 
 ###
-PATCH {{baseUrl}}/recados/12
+PATCH {{baseUrl}}/recados/17
 Content-Type: application/json
 
 {
-  "texto": "ATUALIZAR O RECADO 12",
+  "texto": "ATUALIZAR O RECADO 17",
   "lido": false
 }
 ###
 
 ###
-DELETE  {{baseUrl}}/recados/2
+DELETE  {{baseUrl}}/recados/17
 ###
 
 
@@ -48,7 +48,7 @@ GET {{baseUrl}}/pessoas/?limit=10&offset=12
 ###
 
 ###
-GET {{baseUrl}}/pessoas/2/
+GET {{baseUrl}}/pessoas/8/
 ###
 
 ###
@@ -56,22 +56,22 @@ POST {{baseUrl}}/pessoas/
 Content-Type: application/json
 
 {
-  "email": "email@email3.com",
+  "email": "email@email4.com",
   "nome": "NAUAK",
   "password": "123456"
 }
 ###
 
 ###
-PATCH {{baseUrl}}/pessoas/7
+PATCH {{baseUrl}}/pessoas/10
 Content-Type: application/json
 
 {
-  "nome": "nauak",
+  "nome": "KAUAN",
   "password": "654321"
 }
 ###
 
 ###
-DELETE  {{baseUrl}}/pessoas/7
+DELETE  {{baseUrl}}/pessoas/10
 ###
