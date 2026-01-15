@@ -13,13 +13,9 @@ export class SimpleMiddleware implements NestMiddleware {
       req['user'] = {
         nome: 'Kauan',
         sobrenome: 'Fiolo',
-        role: 'admin'
+        role: 'user'
       };
     }
-
-    console.log(req);
-
-    res.setHeader('CABECALHO', 'Do Middleware');
 
     // Terminando a cadeia de chamadas
     // return res.status(404).send({

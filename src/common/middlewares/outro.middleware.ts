@@ -7,15 +7,6 @@ export class OutroMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction) {
     console.log('OutroMiddlware: Olá');
 
-    const authorization = req.headers.authorization;
-
-    if (authorization) {
-      req['user'] = {
-        nome: 'Kauan',
-        sobrenome: 'Fiolo'
-      };
-    }
-
     res.setHeader('CABECALHO', 'Do Middleware');
 
     // Terminando a cadeia de chamadas

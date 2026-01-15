@@ -32,10 +32,10 @@ import { IsAdminGuard } from '../common/guards/is-admin.guard';
       provide: APP_FILTER,
       useClass: ErrorExceptionFilter
     },
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: IsAdminGuard
-    // }
+    {
+      provide: APP_GUARD,
+      useClass: IsAdminGuard
+    }
   ]
 })
 export class AppModule implements NestModule {
@@ -45,9 +45,9 @@ export class AppModule implements NestModule {
       method: RequestMethod.ALL
     });
 
-    consumer.apply(OutroMiddleware).forRoutes({
-      path: '*',
-      method: RequestMethod.ALL
-    });
+    // consumer.apply(OutroMiddleware).forRoutes({
+    //   path: '*',
+    //   method: RequestMethod.ALL
+    // });
   }
 }

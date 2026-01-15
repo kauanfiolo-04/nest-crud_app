@@ -11,7 +11,8 @@ import type { Request } from 'express';
 // DTO - Data Transfer Object
 // DTO -> Simple Object -> Validate data / Transform data
 
-@UseInterceptors(AuthTokenInterceptor)
+// @UseInterceptors(AuthTokenInterceptor)
+// @useGards(IsAdminGuard)
 @Controller('recados')
 export class RecadosController {
   constructor(private readonly recadosService: RecadosService) {}
