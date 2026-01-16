@@ -3,6 +3,7 @@ import { RecadosService } from './recados.service';
 import { CreateRecadoDto } from './dto/create-recado.dto';
 import { UpdateRecadoDto } from './dto/update-recado.dto';
 import { PaginationDTO } from '../common/dto/pagination.dto';
+import { RecadosUtils } from './recados.utils';
 
 // DTO - Data Transfer Object
 // DTO -> Simple Object -> Validate data / Transform data
@@ -11,7 +12,10 @@ import { PaginationDTO } from '../common/dto/pagination.dto';
 // @useGards(IsAdminGuard)
 @Controller('recados')
 export class RecadosController {
-  constructor(private readonly recadosService: RecadosService) {}
+  constructor(
+    private readonly recadosService: RecadosService,
+    private readonly recadosUtils: RecadosUtils
+  ) {}
 
   @Get()
   findAll(@Query() paginationDto: PaginationDTO) {
@@ -20,6 +24,8 @@ export class RecadosController {
 
   @Get(':id')
   findOne(@Param('id') id: number) {
+    console.log(this.recadosUtils.invertString('nauaK'));
+
     return this.recadosService.findOne(id);
   }
 
