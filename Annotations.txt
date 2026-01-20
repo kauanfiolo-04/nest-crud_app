@@ -7,3 +7,9 @@ Interceptors -> You can execute some things before or after the Controller execu
 Middleware -> Low level, get accesess to the original Server Requests and Responses
 
 Pipes -> Transform or Validate, the Parameters or the Body of the Requisition
+
+
+
+Circular DI(Dependency Injection) --> use forwardRef(() => <module_name>) in the Module "imports" to resolve the problem
+
+Use mock classes to test the application

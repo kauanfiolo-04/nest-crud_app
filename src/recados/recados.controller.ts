@@ -1,9 +1,10 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Inject, Param, Patch, Post, Query } from '@nestjs/common';
 import { RecadosService } from './recados.service';
 import { CreateRecadoDto } from './dto/create-recado.dto';
 import { UpdateRecadoDto } from './dto/update-recado.dto';
 import { PaginationDTO } from '../common/dto/pagination.dto';
 import { RecadosUtils } from './recados.utils';
+import { SERVER_NAME } from '../common/constants/server-name.constant';
 
 // DTO - Data Transfer Object
 // DTO -> Simple Object -> Validate data / Transform data
@@ -14,11 +15,14 @@ import { RecadosUtils } from './recados.utils';
 export class RecadosController {
   constructor(
     private readonly recadosService: RecadosService,
-    private readonly recadosUtils: RecadosUtils
+    private readonly recadosUtils: RecadosUtils,
+    @Inject(SERVER_NAME)
+    private readonly serverName: string
   ) {}
 
   @Get()
   findAll(@Query() paginationDto: PaginationDTO) {
+    console.log(this.serverName);
     return this.recadosService.findAll(paginationDto);
   }
 
