@@ -1,5 +1,9 @@
-Filters -> catch or change Excpetions
+DTO(Data Transfer Object) -> Simple Object -> Validate data / Transform data
 
+####
+
+Filters -> catch or change Excpetions
+    
 Guards -> Allow or not the accesses to any route
 
 Interceptors -> You can execute some things before or after the Controller execution, can also observe the data or change it
@@ -8,7 +12,7 @@ Middleware -> Low level, get accesess to the original Server Requests and Respon
 
 Pipes -> Transform or Validate, the Parameters or the Body of the Requisition
 
-
+######
 
 Circular DI(Dependency Injection) --> use forwardRef(() => <module_name>) in the Module "imports" to resolve the problem
 

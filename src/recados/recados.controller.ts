@@ -4,10 +4,8 @@ import { CreateRecadoDto } from './dto/create-recado.dto';
 import { UpdateRecadoDto } from './dto/update-recado.dto';
 import { PaginationDTO } from '../common/dto/pagination.dto';
 import { RecadosUtils } from './recados.utils';
-import { SERVER_NAME } from '../common/constants/server-name.constant';
-
-// DTO - Data Transfer Object
-// DTO -> Simple Object -> Validate data / Transform data
+import { ONLY_LOWERCASE_LETTERS_REGEX, REMOVE_SPACES_REGEX, SERVER_NAME } from './recados.constants';
+import type { RegexProtocol } from '../common/regex/regex.protocol';
 
 // @UseInterceptors(AuthTokenInterceptor)
 // @useGards(IsAdminGuard)
@@ -17,11 +15,17 @@ export class RecadosController {
     private readonly recadosService: RecadosService,
     private readonly recadosUtils: RecadosUtils,
     @Inject(SERVER_NAME)
-    private readonly serverName: string
+    private readonly serverName: string,
+    @Inject(REMOVE_SPACES_REGEX)
+    private readonly removeSpacesRegex: RegexProtocol,
+    @Inject(ONLY_LOWERCASE_LETTERS_REGEX)
+    private readonly onlyLowercaseLettersRegex: RegexProtocol
   ) {}
 
   @Get()
   findAll(@Query() paginationDto: PaginationDTO) {
+    console.log(this.removeSpacesRegex.execute('Batata Quente'));
+    console.log(this.onlyLowercaseLettersRegex.execute('Batata Quente'));
     console.log(this.serverName);
     return this.recadosService.findAll(paginationDto);
   }
