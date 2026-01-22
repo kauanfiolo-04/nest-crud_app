@@ -1,36 +1,35 @@
 import { forwardRef, Module } from '@nestjs/common';
-import { RecadosController } from './recados.controller';
-import { RecadosService } from './recados.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Recado } from './entities/recado.entity';
+import { RecadosController } from './recados.controller';
+import { RecadosService } from './recados.service';
 import { PessoasModule } from '../pessoas/pessoas.module';
-import { RecadosUtils, RecadosUtilsMock } from './recados.utils';
-import { ONLY_LOWERCASE_LETTERS_REGEX, REMOVE_SPACES_REGEX, SERVER_NAME } from './recados.constants';
-import { RemoveSpacesRegex } from '../common/regex/remove-spaces.regex';
-import { OnlyLowercaseLettersRegex } from '../common/regex/only-lowercas-letters.regex';
+import { RecadosUtils } from './recados.utils';
+import { RegexFactory } from '../common/regex/regex.factory';
+import { ONLY_LOWERCASE_LETTERS_REGEX, REMOVE_SPACES_REGEX } from './recados.constants';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Recado]), forwardRef(() => PessoasModule)],
   controllers: [RecadosController],
   providers: [
     RecadosService,
+    RecadosUtils,
+    RegexFactory,
     {
-      provide: RecadosUtils, // Token
-      useValue: new RecadosUtilsMock() // Valor a ser usado
+      provide: REMOVE_SPACES_REGEX, // token
+      useFactory: (regexFactory: RegexFactory) => {
+        return regexFactory.create('RemoveSpacesRegex');
+      }, // Factory
+      inject: [RegexFactory] // Oq estou injetando na factory seguindo a ordem
     },
     {
-      provide: SERVER_NAME,
-      useValue: 'my name is Nest JS'
-    },
-    {
-      provide: ONLY_LOWERCASE_LETTERS_REGEX,
-      useClass: OnlyLowercaseLettersRegex
-    },
-    {
-      provide: REMOVE_SPACES_REGEX,
-      useClass: RemoveSpacesRegex
+      provide: ONLY_LOWERCASE_LETTERS_REGEX, // token
+      useFactory: (regexFactory: RegexFactory) => {
+        return regexFactory.create('OnlyLowercaseLettersRegex');
+      }, // Factory
+      inject: [RegexFactory] // Oq estou injetando na factory seguindo a ordem
     }
   ],
-  exports: [RecadosUtils, SERVER_NAME]
+  exports: [RecadosUtils]
 })
 export class RecadosModule {}
