@@ -24,7 +24,13 @@ import { ONLY_LOWERCASE_LETTERS_REGEX, REMOVE_SPACES_REGEX } from './recados.con
     },
     {
       provide: ONLY_LOWERCASE_LETTERS_REGEX, // token
-      useFactory: (regexFactory: RegexFactory) => {
+      useFactory: async (regexFactory: RegexFactory) => {
+        console.log('Esperando promise no useFactory');
+
+        await new Promise(resolve => setTimeout(resolve, 3000));
+
+        console.log('Promise no useFactory resolvida');
+
         return regexFactory.create('OnlyLowercaseLettersRegex');
       }, // Factory
       inject: [RegexFactory] // Oq estou injetando na factory seguindo a ordem
