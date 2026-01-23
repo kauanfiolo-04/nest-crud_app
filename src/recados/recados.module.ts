@@ -6,7 +6,6 @@ import { RecadosService } from './recados.service';
 import { PessoasModule } from '../pessoas/pessoas.module';
 import { RecadosUtils } from './recados.utils';
 import { RegexFactory } from '../common/regex/regex.factory';
-import { ONLY_LOWERCASE_LETTERS_REGEX, REMOVE_SPACES_REGEX } from './recados.constants';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Recado]), forwardRef(() => PessoasModule)],
@@ -14,27 +13,27 @@ import { ONLY_LOWERCASE_LETTERS_REGEX, REMOVE_SPACES_REGEX } from './recados.con
   providers: [
     RecadosService,
     RecadosUtils,
-    RegexFactory,
-    {
-      provide: REMOVE_SPACES_REGEX, // token
-      useFactory: (regexFactory: RegexFactory) => {
-        return regexFactory.create('RemoveSpacesRegex');
-      }, // Factory
-      inject: [RegexFactory] // Oq estou injetando na factory seguindo a ordem
-    },
-    {
-      provide: ONLY_LOWERCASE_LETTERS_REGEX, // token
-      useFactory: async (regexFactory: RegexFactory) => {
-        console.log('Esperando promise no useFactory');
+    RegexFactory
+    // {
+    //   provide: REMOVE_SPACES_REGEX, // token
+    //   useFactory: (regexFactory: RegexFactory) => {
+    //     return regexFactory.create('RemoveSpacesRegex');
+    //   }, // Factory
+    //   inject: [RegexFactory] // Oq estou injetando na factory seguindo a ordem
+    // },
+    // {
+    //   provide: ONLY_LOWERCASE_LETTERS_REGEX, // token
+    //   useFactory: async (regexFactory: RegexFactory) => {
+    //     console.log('Esperando promise no useFactory');
 
-        await new Promise(resolve => setTimeout(resolve, 3000));
+    //     await new Promise(resolve => setTimeout(resolve, 3000));
 
-        console.log('Promise no useFactory resolvida');
+    //     console.log('Promise no useFactory resolvida');
 
-        return regexFactory.create('OnlyLowercaseLettersRegex');
-      }, // Factory
-      inject: [RegexFactory] // Oq estou injetando na factory seguindo a ordem
-    }
+    //     return regexFactory.create('OnlyLowercaseLettersRegex');
+    //   }, // Factory
+    //   inject: [RegexFactory] // Oq estou injetando na factory seguindo a ordem
+    // }
   ],
   exports: [RecadosUtils]
 })

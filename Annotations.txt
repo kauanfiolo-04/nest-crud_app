@@ -17,3 +17,7 @@ Pipes -> Transform or Validate, the Parameters or the Body of the Requisition
 Circular DI(Dependency Injection) --> use forwardRef(() => <module_name>) in the Module "imports" to resolve the problem
 
 Use mock classes to test the application
+
+U can create an Protocol to implements common classes
+
+useFactory -> to add some logic in the provider when instantiating a class, can be async
