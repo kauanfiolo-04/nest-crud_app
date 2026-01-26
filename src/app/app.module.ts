@@ -4,34 +4,28 @@ import { AppService } from './app.service';
 import { RecadosModule } from '../recados/recados.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PessoasModule } from '../pessoas/pessoas.module';
-import { ConfigModule } from '@nestjs/config';
-import * as Joi from '@hapi/joi';
+import { ConfigModule, type ConfigType } from '@nestjs/config';
+import appConfig from './app.config';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      // envFilePath: ['.env'],
-      // ignoreEnvFile: true,
-      validationSchema: Joi.object({
-        DATABASE_TYPE: Joi.required(),
-        DATABASE_HOST: Joi.required(),
-        DATABASE_PORT: Joi.number().default(5432),
-        DATABASE_USERNAME: Joi.required(),
-        DATABASE_DATABASE: Joi.required(),
-        DATABASE_PASSWORD: Joi.required(),
-        DATABASE_AUTOLOADENTITIES: Joi.number().min(0).max(1).default(0),
-        DATABASE_SYNCHRONIZE: Joi.number().min(0).max(1).default(0)
-      })
-    }),
-    TypeOrmModule.forRoot({
-      type: process.env.DATABASE_TYPE as 'postgres',
-      host: process.env.DATABASE_HOST,
-      port: Number(process.env.DATABASE_PORT),
-      username: process.env.DATABASE_USERNAME,
-      database: process.env.DATABASE_DATABASE,
-      password: process.env.DATABASE_PASSWORD,
-      autoLoadEntities: Boolean(process.env.DATABASE_AUTOLOADINGENTITIES), // carrega entidades sem precisar especifica-las
-      synchronize: Boolean(process.env.DATABASE_SYNCHRONIZE) // sincronize com o BD. Nao deve ser usado em producao
+    ConfigModule.forRoot(),
+    ConfigModule.forFeature(appConfig),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule.forFeature(appConfig)],
+      inject: [appConfig.KEY],
+      useFactory: (appConfiguration: ConfigType<typeof appConfig>) => {
+        return {
+          type: appConfiguration.database.type,
+          host: appConfiguration.database.host,
+          port: appConfiguration.database.port,
+          username: appConfiguration.database.username,
+          database: appConfiguration.database.database,
+          password: appConfiguration.database.password,
+          autoLoadEntities: appConfiguration.database.autoLoadEntities,
+          synchronize: appConfiguration.database.synchronize
+        };
+      }
     }),
     RecadosModule,
     PessoasModule
