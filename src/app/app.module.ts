@@ -10,7 +10,6 @@ import { GlobalConfigModule } from '../global-config/global-config.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
     ConfigModule.forFeature(globalConfig),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule.forFeature(globalConfig)],
