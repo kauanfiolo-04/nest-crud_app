@@ -1,14 +1,14 @@
 import { Controller, Get, Inject } from '@nestjs/common';
 import { AppService } from './app.service';
-import appConfig from './app.config';
 import { type ConfigType } from '@nestjs/config';
+import globalConfig from '../global-config/global.config';
 
 @Controller()
 export class AppController {
   constructor(
     private readonly appService: AppService,
-    @Inject(appConfig.KEY)
-    private readonly appConfiguration: ConfigType<typeof appConfig>
+    @Inject(globalConfig.KEY)
+    private readonly globalConfiguration: ConfigType<typeof globalConfig>
   ) {}
 
   @Get()

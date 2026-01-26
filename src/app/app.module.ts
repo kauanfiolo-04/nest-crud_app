@@ -5,30 +5,32 @@ import { RecadosModule } from '../recados/recados.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PessoasModule } from '../pessoas/pessoas.module';
 import { ConfigModule, type ConfigType } from '@nestjs/config';
-import appConfig from './app.config';
+import globalConfig from '../global-config/global.config';
+import { GlobalConfigModule } from '../global-config/global-config.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    ConfigModule.forFeature(appConfig),
+    ConfigModule.forFeature(globalConfig),
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule.forFeature(appConfig)],
-      inject: [appConfig.KEY],
-      useFactory: (appConfiguration: ConfigType<typeof appConfig>) => {
+      imports: [ConfigModule.forFeature(globalConfig)],
+      inject: [globalConfig.KEY],
+      useFactory: (globalConfiguration: ConfigType<typeof globalConfig>) => {
         return {
-          type: appConfiguration.database.type,
-          host: appConfiguration.database.host,
-          port: appConfiguration.database.port,
-          username: appConfiguration.database.username,
-          database: appConfiguration.database.database,
-          password: appConfiguration.database.password,
-          autoLoadEntities: appConfiguration.database.autoLoadEntities,
-          synchronize: appConfiguration.database.synchronize
+          type: globalConfiguration.database.type,
+          host: globalConfiguration.database.host,
+          port: globalConfiguration.database.port,
+          username: globalConfiguration.database.username,
+          database: globalConfiguration.database.database,
+          password: globalConfiguration.database.password,
+          autoLoadEntities: globalConfiguration.database.autoLoadEntities,
+          synchronize: globalConfiguration.database.synchronize
         };
       }
     }),
     RecadosModule,
-    PessoasModule
+    PessoasModule,
+    GlobalConfigModule
   ],
   controllers: [AppController],
   providers: [
