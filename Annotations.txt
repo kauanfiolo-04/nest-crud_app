@@ -22,4 +22,9 @@ U can create an Protocol to implements common classes
 
 useFactory -> to add some logic in the provider when instantiating a class, can be async
 
-Dinamic Modules ->
+Providers Scope:
+  Scope.DEFAULT -> The provider is a singleton (The provider lifetime is strictly tied to the application lifecycle.)
+
+  Scope.REQUEST -> The provider is instantiated with each requisition
+
+  Scope.TRANSIENT -> It's created an instance of the provider to each class that inject the provider
