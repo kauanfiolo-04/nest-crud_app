@@ -8,7 +8,14 @@ import { RecadosUtils } from './recados.utils';
 import { RegexFactory } from '../common/regex/regex.factory';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Recado]), forwardRef(() => PessoasModule)],
+  imports: [
+    TypeOrmModule.forFeature([Recado]),
+    forwardRef(() => PessoasModule)
+    // MyDinamicModule.register({
+    //   apiKey: 'Aqui vem a chave de API',
+    //   apiUrl: 'https://bla.bla.com'
+    // })
+  ],
   controllers: [RecadosController],
   providers: [
     RecadosService,
