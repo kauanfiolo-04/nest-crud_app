@@ -32,4 +32,6 @@ Providers Scope:
 #####
 
 Ambient Environment -> Needs @nestjs/config to use the .env
-  Can also use the ConfigModule.forRoot({ envFilePath: <yourPath | [...yourPaths]> })
+  Can also use the ConfigModule.forRoot({ envFilePath: <yourPath | [...yourPaths]> }) to set the path to you envFile
+
+  Can also use the @hapi/Joi lib, in the ConfigModule.forRoot({ validationSchema: Joi.object({ <yourSchema> }) })
