@@ -6,11 +6,13 @@ import { RecadosService } from './recados.service';
 import { PessoasModule } from '../pessoas/pessoas.module';
 import { RecadosUtils } from './recados.utils';
 import { RegexFactory } from '../common/regex/regex.factory';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Recado]),
-    forwardRef(() => PessoasModule)
+    forwardRef(() => PessoasModule),
+    ConfigModule
     // MyDinamicModule.register({
     //   apiKey: 'Aqui vem a chave de API',
     //   apiUrl: 'https://bla.bla.com'
