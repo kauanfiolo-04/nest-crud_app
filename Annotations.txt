@@ -28,3 +28,8 @@ Providers Scope:
   Scope.REQUEST -> The provider is instantiated with each requisition
 
   Scope.TRANSIENT -> It's created an instance of the provider to each class that inject the provider
+
+#####
+
+Ambient Environment -> Needs @nestjs/config to use the .env
+  Can also use the ConfigModule.forRoot({ envFilePath: <yourPath | [...yourPaths]> })
