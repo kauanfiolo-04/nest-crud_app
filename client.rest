@@ -56,19 +56,19 @@ POST {{baseUrl}}/pessoas/
 Content-Type: application/json
 
 {
-  "email": "email@email4.com",
-  "nome": "NAUAK",
+  "email": "email@email6.com",
+  "nome": "KAUAN Fiolo",
   "password": "123456"
 }
 ###
 
 ###
-PATCH {{baseUrl}}/pessoas/10
+PATCH {{baseUrl}}/pessoas/8
 Content-Type: application/json
 
 {
-  "nome": "KAUAN",
-  "password": "654321"
+  "nome": "kauan",
+  "password": "AAAAAA"
 }
 ###
 

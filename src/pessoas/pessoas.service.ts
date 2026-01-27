@@ -4,12 +4,14 @@ import { UpdatePessoaDto } from './dto/update-pessoa.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Pessoa } from './entities/pessoa.entity';
+import { HashingService } from '../auth/hashing/hashing.service';
 
 @Injectable()
 export class PessoasService {
   constructor(
     @InjectRepository(Pessoa)
-    private readonly pessoaRepository: Repository<Pessoa>
+    private readonly pessoaRepository: Repository<Pessoa>,
+    private readonly hashingService: HashingService
   ) {}
 
   throwNotFoundException(): never {
@@ -18,10 +20,12 @@ export class PessoasService {
 
   async create(createPessoaDto: CreatePessoaDto) {
     try {
+      const passwordHash = await this.hashingService.hash(createPessoaDto.password);
+
       const pessoaDados = {
         nome: createPessoaDto.nome,
         email: createPessoaDto.email,
-        passwordHash: createPessoaDto.password
+        passwordHash
       };
 
       const novaPessoa = this.pessoaRepository.create(pessoaDados);
@@ -57,9 +61,14 @@ export class PessoasService {
 
   async update(id: number, updatePessoaDto: UpdatePessoaDto) {
     const dadosPessoa = {
-      nome: updatePessoaDto.nome,
-      passwordHash: updatePessoaDto.password
+      nome: updatePessoaDto.nome
     };
+
+    if (updatePessoaDto.password) {
+      const passwordHash = await this.hashingService.hash(updatePessoaDto.password);
+
+      dadosPessoa['passwordHash'] = passwordHash;
+    }
 
     const pessoa = await this.pessoaRepository.preload({
       id,
