@@ -56,7 +56,7 @@ POST {{baseUrl}}/pessoas/
 Content-Type: application/json
 
 {
-  "email": "email@email6.com",
+  "email": "kauan@emailteste.com",
   "nome": "KAUAN Fiolo",
   "password": "123456"
 }
@@ -74,4 +74,16 @@ Content-Type: application/json
 
 ###
 DELETE  {{baseUrl}}/pessoas/10
+###
+
+# Auth
+
+###
+POST {{baseUrl}}/auth/
+Content-Type: application/json
+
+{
+  "email": "kauan@emailteste.com",
+  "password": "123456"
+}
 ###
