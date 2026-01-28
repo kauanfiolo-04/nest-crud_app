@@ -5,7 +5,6 @@
 
 ###
 GET {{baseUrl}}/recados/?limit=10&offset=0
-Authorization: Bearer {{authToken}}
 ###
 
 ###
@@ -14,27 +13,29 @@ GET {{baseUrl}}/recados/18/
 
 ###
 POST {{baseUrl}}/recados/
+Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
   "texto": "Recado Novo",
-  "deId": 8,
-  "paraId": 9
+  "paraId": 8
 }
 ###
 
 ###
-PATCH {{baseUrl}}/recados/17
+PATCH {{baseUrl}}/recados/18
+Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
-  "texto": "ATUALIZAR O RECADO 17",
+  "texto": "ATUALIZAR O RECADO 19",
   "lido": false
 }
 ###
 
 ###
-DELETE  {{baseUrl}}/recados/17
+DELETE  {{baseUrl}}/recados/18
+Authorization: Bearer {{authToken}}
 ###
 
 
