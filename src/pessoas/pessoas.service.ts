@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePessoaDto } from './dto/create-pessoa.dto';
 import { UpdatePessoaDto } from './dto/update-pessoa.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -17,6 +17,10 @@ export class PessoasService {
 
   throwNotFoundException(): never {
     throw new NotFoundException('Pessoa não econtrada');
+  }
+
+  throwForbiddenException(): never {
+    throw new ForbiddenException('Voce não é essa pessoa!');
   }
 
   async create(createPessoaDto: CreatePessoaDto) {
@@ -78,6 +82,8 @@ export class PessoasService {
 
     if (!pessoa) this.throwNotFoundException();
 
+    if (pessoa.id !== tokenPayload.sub) this.throwForbiddenException();
+
     return await this.pessoaRepository.save(pessoa);
   }
 
@@ -85,6 +91,8 @@ export class PessoasService {
     const pessoa = await this.pessoaRepository.findOneBy({ id });
 
     if (!pessoa) this.throwNotFoundException();
+
+    if (pessoa.id !== tokenPayload.sub) this.throwForbiddenException();
 
     return await this.pessoaRepository.remove(pessoa);
   }

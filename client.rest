@@ -63,18 +63,17 @@ Content-Type: application/json
 ###
 
 ###
-PATCH {{baseUrl}}/pessoas/8
+PATCH {{baseUrl}}/pessoas/15
 Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
-  "nome": "kauan",
-  "password": "AAAAAA"
+  "nome": "kauan"
 }
 ###
 
 ###
-DELETE  {{baseUrl}}/pessoas/10
+DELETE  {{baseUrl}}/pessoas/13
 Authorization: Bearer {{authToken}}
 ###
 
