@@ -1,4 +1,4 @@
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { type ConfigType } from '@nestjs/config';
@@ -6,6 +6,7 @@ import { LoginDto } from './dto/login.dto';
 import { Pessoa } from '../pessoas/entities/pessoa.entity';
 import { HashingService } from './hashing/hashing.service';
 import jwtConfig from './config/jwt.config';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
@@ -14,29 +15,32 @@ export class AuthService {
     private readonly pessoaRepository: Repository<Pessoa>,
     private readonly hashingService: HashingService,
     @Inject(jwtConfig.KEY)
-    private readonly jwtConfiguration: ConfigType<typeof jwtConfig>
+    private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
+    private readonly jwtService: JwtService
   ) {}
 
   async login(loginDto: LoginDto) {
-    let passwordIsValid = false;
-    let throwError = true;
-
     const pessoa = await this.pessoaRepository.findOneBy({ email: loginDto.email });
 
-    if (pessoa) {
-      passwordIsValid = await this.hashingService.compare(loginDto.password, pessoa.passwordHash);
-    }
+    if (!pessoa) throw new NotFoundException('Nenhum usuário foi encontrado com este email');
 
-    if (passwordIsValid) {
-      throwError = false;
-    }
+    const passwordIsValid = await this.hashingService.compare(loginDto.password, pessoa.passwordHash);
 
-    if (throwError) {
-      throw new UnauthorizedException('Usuário ou senha inválidos.');
-    }
+    if (!passwordIsValid) throw new UnauthorizedException('Senha inválida');
 
-    return {
-      message: 'Usuário logado!'
-    };
+    const accessToken = await this.jwtService.signAsync(
+      {
+        sub: pessoa.id,
+        email: pessoa.email
+      },
+      {
+        audience: this.jwtConfiguration.audience,
+        issuer: this.jwtConfiguration.issuer,
+        secret: this.jwtConfiguration.secret,
+        expiresIn: this.jwtConfiguration.jwtTtl
+      }
+    );
+
+    return { accessToken };
   }
 }

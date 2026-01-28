@@ -7,10 +7,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Pessoa } from '../pessoas/entities/pessoa.entity';
 import { ConfigModule } from '@nestjs/config';
 import jwtConfig from './config/jwt.config';
+import { JwtModule } from '@nestjs/jwt';
 
 @Global() // nao há necessidade de importar em outros modulos para utilizar
 @Module({
-  imports: [TypeOrmModule.forFeature([Pessoa]), ConfigModule.forFeature(jwtConfig)],
+  imports: [
+    TypeOrmModule.forFeature([Pessoa]),
+    ConfigModule.forFeature(jwtConfig),
+    JwtModule.registerAsync(jwtConfig.asProvider())
+  ],
   controllers: [AuthController],
   providers: [
     {
