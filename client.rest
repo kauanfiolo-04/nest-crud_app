@@ -45,6 +45,7 @@ DELETE  {{baseUrl}}/recados/17
 
 ###
 GET {{baseUrl}}/pessoas/?limit=10&offset=12
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjE1LCJlbWFpbCI6ImthdWFuQGVtYWlsdGVzdGUuY29tIiwiaWF0IjoxNzY5NjIzOTIxLCJleHAiOjE3Njk2Mjc1MjEsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6MzAwMCIsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6MzAwMCJ9.4-gnIdb1DT7T-RVnz_Vdb1GQoD_8nw196mmH6G9u7A8
 ###
 
 ###
