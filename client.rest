@@ -24,13 +24,13 @@ Content-Type: application/json
 ###
 
 ###
-PATCH {{baseUrl}}/recados/18
+PATCH {{baseUrl}}/recados/19
 Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
   "texto": "ATUALIZAR O RECADO 19",
-  "lido": false
+  "lido": true
 }
 ###
 

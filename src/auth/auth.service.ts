@@ -21,6 +21,10 @@ export class AuthService {
     private readonly jwtService: JwtService
   ) {}
 
+  throwUnauthorizedUser(): never {
+    throw new UnauthorizedException('Usuário não permitido!');
+  }
+
   private async signJwtAsync<T>(sub: number, expiresIn: number, payload?: T) {
     return await this.jwtService.signAsync(
       {
@@ -53,6 +57,8 @@ export class AuthService {
 
     if (!pessoa) throw new NotFoundException('Nenhum usuário foi encontrado com este email');
 
+    if (!pessoa.active) this.throwUnauthorizedUser();
+
     const passwordIsValid = await this.hashingService.compare(loginDto.password, pessoa.passwordHash);
 
     if (!passwordIsValid) throw new UnauthorizedException('Senha inválida');
@@ -72,6 +78,8 @@ export class AuthService {
       if (!pessoa) {
         throw new Error('Pessoa não encontrada');
       }
+
+      if (!pessoa.active) this.throwUnauthorizedUser();
 
       return this.createTokens(pessoa);
     } catch (error: unknown) {
