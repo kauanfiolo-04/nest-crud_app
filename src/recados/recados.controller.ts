@@ -6,14 +6,19 @@ import { PaginationDTO } from '../common/dto/pagination.dto';
 import { AuthTokenGuard } from '../auth/guards/auth-token.guard';
 import { TokenPayloadParam } from '../auth/params/token-payload.param';
 import { TokenPayloadDto } from '../auth/dto/tokenPayload.dto';
+import { RoutePolicyGuard } from '../auth/guards/route-policy.guard';
+import { SetRoutePolicy } from '../auth/decorators/set-route-policy.decorator';
+import { RoutePolicies } from '../auth/enum/route-policies.enum';
 
 // @UseInterceptors(AuthTokenInterceptor)
 // @useGards(IsAdminGuard)
+@UseGuards(RoutePolicyGuard)
 @Controller('recados')
 export class RecadosController {
   constructor(private readonly recadosService: RecadosService) {}
 
   @Get()
+  @SetRoutePolicy(RoutePolicies.findAllRecados)
   findAll(@Query() paginationDto: PaginationDTO) {
     return this.recadosService.findAll(paginationDto);
   }

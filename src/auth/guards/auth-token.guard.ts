@@ -19,6 +19,14 @@ export class AuthTokenGuard implements CanActivate {
     private readonly jwtConfiguration: ConfigType<typeof jwtConfig>
   ) {}
 
+  extractTokenFromHeader(request: Request): string | undefined {
+    const authorization = request.headers.authorization;
+
+    if (!authorization || typeof authorization !== 'string') return;
+
+    return authorization.split(' ')[1];
+  }
+
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
 
@@ -39,13 +47,5 @@ export class AuthTokenGuard implements CanActivate {
     }
 
     return true;
-  }
-
-  extractTokenFromHeader(request: Request): string | undefined {
-    const authorization = request.headers.authorization;
-
-    if (!authorization || typeof authorization !== 'string') return;
-
-    return authorization.split(' ')[1];
   }
 }

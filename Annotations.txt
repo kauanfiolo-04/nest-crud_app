@@ -37,3 +37,12 @@ Ambient Environment -> Needs @nestjs/config to use the .env
   Can also use the @hapi/Joi lib, in the ConfigModule.forRoot({ validationSchema: Joi.object({ <yourSchema> }) })
 
   Can also get those information using the ConfigService<yourSchemaType> provider, but you need to import in the module you wanna use
+
+####
+
+Role metadata -> Description of the data you're transmitting
+  Decorator: @SetMetadata(<key>, <value>)
+
+  To get the metadata you set, you need to use the Reflector object inside the Guard "constructor(private readonly reflector: Reflector)", and then you get it passing:
+    this.reflector.get(<key>, context.getHandler())
+ 
