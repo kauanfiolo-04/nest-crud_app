@@ -1,6 +1,9 @@
+import { Pessoa } from '../pessoas/entities/pessoa.entity';
+
 export default interface JwtPayload {
-  sub: number;
   email?: string;
+  pessoa?: Pessoa;
+  sub: number;
   iat: number;
   exp: number;
   aud: string;

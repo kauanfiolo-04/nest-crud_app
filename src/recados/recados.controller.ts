@@ -12,13 +12,11 @@ import { RoutePolicies } from '../auth/enum/route-policies.enum';
 
 // @UseInterceptors(AuthTokenInterceptor)
 // @useGards(IsAdminGuard)
-@UseGuards(RoutePolicyGuard)
 @Controller('recados')
 export class RecadosController {
   constructor(private readonly recadosService: RecadosService) {}
 
   @Get()
-  @SetRoutePolicy(RoutePolicies.findAllRecados)
   findAll(@Query() paginationDto: PaginationDTO) {
     return this.recadosService.findAll(paginationDto);
   }
@@ -28,13 +26,14 @@ export class RecadosController {
     return this.recadosService.findOne(id);
   }
 
-  @UseGuards(AuthTokenGuard)
+  @UseGuards(AuthTokenGuard, RoutePolicyGuard)
+  @SetRoutePolicy(RoutePolicies.createRecado)
   @Post()
   create(@Body() createBodyDto: CreateRecadoDto, @TokenPayloadParam() tokenPayload: TokenPayloadDto) {
     return this.recadosService.create(createBodyDto, tokenPayload);
   }
 
-  @UseGuards(AuthTokenGuard)
+  @UseGuards(AuthTokenGuard, RoutePolicyGuard)
   @Patch(':id')
   update(
     @Param('id') id: number,
@@ -44,7 +43,7 @@ export class RecadosController {
     return this.recadosService.update(id, updateBodyDto, tokenPayload);
   }
 
-  @UseGuards(AuthTokenGuard)
+  @UseGuards(AuthTokenGuard, RoutePolicyGuard)
   @Delete(':id')
   remove(@Param('id') id: number, @TokenPayloadParam() tokenPayload: TokenPayloadDto) {
     return this.recadosService.remove(id, tokenPayload);
