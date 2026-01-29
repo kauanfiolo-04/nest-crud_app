@@ -7,6 +7,8 @@ import { Pessoa } from '../pessoas/entities/pessoa.entity';
 import { HashingService } from './hashing/hashing.service';
 import jwtConfig from './config/jwt.config';
 import { JwtService } from '@nestjs/jwt';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
+import JwtPayload from './jwt-payload.protocol';
 
 @Injectable()
 export class AuthService {
@@ -19,6 +21,33 @@ export class AuthService {
     private readonly jwtService: JwtService
   ) {}
 
+  private async signJwtAsync<T>(sub: number, expiresIn: number, payload?: T) {
+    return await this.jwtService.signAsync(
+      {
+        sub,
+        ...payload
+      },
+      {
+        audience: this.jwtConfiguration.audience,
+        issuer: this.jwtConfiguration.issuer,
+        secret: this.jwtConfiguration.secret,
+        expiresIn
+      }
+    );
+  }
+
+  private async createTokens(pessoa: Pessoa) {
+    const accessTokenPromise = this.signJwtAsync<Partial<Pessoa>>(pessoa.id, this.jwtConfiguration.jwtTtl, {
+      email: pessoa.email
+    });
+
+    const refreshTokenPromise = this.signJwtAsync(pessoa.id, this.jwtConfiguration.jwtRefreshTtl);
+
+    const [accessToken, refreshToken] = await Promise.all([accessTokenPromise, refreshTokenPromise]);
+
+    return { accessToken, refreshToken };
+  }
+
   async login(loginDto: LoginDto) {
     const pessoa = await this.pessoaRepository.findOneBy({ email: loginDto.email });
 
@@ -28,19 +57,25 @@ export class AuthService {
 
     if (!passwordIsValid) throw new UnauthorizedException('Senha inválida');
 
-    const accessToken = await this.jwtService.signAsync(
-      {
-        sub: pessoa.id,
-        email: pessoa.email
-      },
-      {
-        audience: this.jwtConfiguration.audience,
-        issuer: this.jwtConfiguration.issuer,
-        secret: this.jwtConfiguration.secret,
-        expiresIn: this.jwtConfiguration.jwtTtl
-      }
-    );
+    return this.createTokens(pessoa);
+  }
 
-    return { accessToken };
+  async refreshTokens(refreshTokenDto: RefreshTokenDto) {
+    try {
+      const { sub } = await this.jwtService.verifyAsync<JwtPayload>(
+        refreshTokenDto.refreshToken,
+        this.jwtConfiguration
+      );
+
+      const pessoa = await this.pessoaRepository.findOneBy({ id: sub });
+
+      if (!pessoa) {
+        throw new Error('Pessoa não encontrada');
+      }
+
+      return this.createTokens(pessoa);
+    } catch (error: unknown) {
+      throw new UnauthorizedException(error instanceof Error ? error.message : 'Erro desconhecido');
+    }
   }
 }
