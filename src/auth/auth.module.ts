@@ -8,6 +8,8 @@ import { Pessoa } from '../pessoas/entities/pessoa.entity';
 import { ConfigModule } from '@nestjs/config';
 import jwtConfig from './config/jwt.config';
 import { JwtModule } from '@nestjs/jwt';
+import { AuthTokenGuard } from './guards/auth-token.guard';
+import { RoutePolicyGuard } from './guards/route-policy.guard';
 
 @Global() // nao há necessidade de importar em outros modulos para utilizar
 @Module({
@@ -22,8 +24,10 @@ import { JwtModule } from '@nestjs/jwt';
       provide: HashingService,
       useClass: BcryptService
     },
-    AuthService
+    AuthService,
+    AuthTokenGuard,
+    RoutePolicyGuard
   ],
-  exports: [HashingService, JwtModule, ConfigModule]
+  exports: [HashingService, JwtModule, ConfigModule, AuthTokenGuard, RoutePolicyGuard]
 })
 export class AuthModule {}

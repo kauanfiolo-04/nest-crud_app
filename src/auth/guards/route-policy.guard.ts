@@ -3,13 +3,14 @@ import { Reflector } from '@nestjs/core';
 import { REQUEST_TOKEN_PAYLOAD_KEY, ROUTE_POLICY_KEY } from '../auth.constants';
 import { RoutePolicies } from '../enum/route-policies.enum';
 import { Request } from 'express';
+import { Pessoa } from '../../pessoas/entities/pessoa.entity';
 import JwtPayload from '../jwt-payload.protocol';
 
 @Injectable()
 export class RoutePolicyGuard implements CanActivate {
   constructor(private readonly reflector: Reflector) {}
 
-  async canActivate(context: ExecutionContext): Promise<boolean> {
+  canActivate(context: ExecutionContext): boolean {
     const routePolicyRequired = this.reflector.get<RoutePolicies | undefined>(ROUTE_POLICY_KEY, context.getHandler());
 
     // Nao tem politica de permissao na rota
@@ -26,9 +27,9 @@ export class RoutePolicyGuard implements CanActivate {
 
     const { pessoa } = tokenPayload;
 
-    console.log(pessoa);
-
-    await new Promise(resolve => resolve);
+    if (!(pessoa as Pessoa).routePolicies.includes(routePolicyRequired)) {
+      throw new UnauthorizedException(`Usuário não tem permissão ${routePolicyRequired}`);
+    }
 
     return true;
   }
