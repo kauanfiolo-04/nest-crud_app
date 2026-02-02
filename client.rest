@@ -18,19 +18,19 @@ Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
-  "texto": "Recado NOVO",
-  "paraId": 1
+  "texto": "Te amo xuxu",
+  "paraId": 4
 }
 ###
 
 ###
-PATCH {{baseUrl}}/recados/19
+PATCH {{baseUrl}}/recados/2
 Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
-  "texto": "ATUALIZAR O RECADO 19",
-  "lido": false
+  # "texto": "ATUALIZAR O RECADO 19",
+  "lido": true
 }
 ###
 
@@ -58,10 +58,10 @@ POST {{baseUrl}}/pessoas/
 Content-Type: application/json
 
 {
-  "email": "kauanTeste@email.com",
-  "nome": "KAUAN TESTE Fiolo",
-  "password": "123456",
-  "routePolicies": []
+  "email": "bia@email.com",
+  "nome": "Bia Linda",
+  "password": "123456"
+  # "routePolicies": []
 }
 ###
 
