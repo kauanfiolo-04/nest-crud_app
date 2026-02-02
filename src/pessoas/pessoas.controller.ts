@@ -11,8 +11,7 @@ import {
   UseInterceptors,
   UploadedFile,
   ParseFilePipeBuilder,
-  HttpStatus,
-  BadRequestException
+  HttpStatus
 } from '@nestjs/common';
 import { PessoasService } from './pessoas.service';
 import { CreatePessoaDto } from './dto/create-pessoa.dto';
@@ -23,8 +22,6 @@ import { REQUEST_TOKEN_PAYLOAD_KEY } from '../auth/auth.constants';
 import { TokenPayloadParam } from '../auth/params/token-payload.param';
 import { TokenPayloadDto } from '../auth/dto/tokenPayload.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import * as path from 'path';
-import * as fs from 'fs/promises';
 
 @Controller('pessoas')
 export class PessoasController {
@@ -67,7 +64,7 @@ export class PessoasController {
   @UseGuards(AuthTokenGuard)
   @UseInterceptors(FileInterceptor('file'))
   @Post('upload-picture')
-  async uploadPicture(
+  uploadPicture(
     @UploadedFile(
       // Outra maneira de adicionar validação
       // new ParseFilePipe({
@@ -77,31 +74,13 @@ export class PessoasController {
       //   ]
       // })
       new ParseFilePipeBuilder()
-        .addFileTypeValidator({ fileType: /^image\/(png|jpeg|jpg)$/ })
+        // .addFileTypeValidator({ fileType: /(image\/jpg|image\/jpeg|image\/png)$/ }) // Tá bugando
         .addMaxSizeValidator({ maxSize: 10 * (1024 * 1024) })
         .build({ errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY })
     )
     file: Express.Multer.File,
     @TokenPayloadParam() tokenPayload: TokenPayloadDto
   ) {
-    if (file.size < 1024) throw new BadRequestException('Arquivo muito leve.');
-
-    const fileExtension = path.extname(file.originalname).toLocaleLowerCase().substring(1);
-
-    const fileName = `${tokenPayload.sub}.${fileExtension}`;
-
-    const fileFullPath = path.resolve(process.cwd(), 'pictures', fileName);
-
-    await fs.writeFile(fileFullPath, file.buffer);
-
-    console.log(fileFullPath);
-
-    return {
-      fieldname: file.fieldname,
-      originalName: file.originalname,
-      mimetype: file.mimetype,
-      buffer: {},
-      size: file.size
-    };
+    return this.pessoasService.uploadPicture(file, tokenPayload);
   }
 }

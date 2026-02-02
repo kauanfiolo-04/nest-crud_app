@@ -1,4 +1,10 @@
-import { ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException
+} from '@nestjs/common';
 import { CreatePessoaDto } from './dto/create-pessoa.dto';
 import { UpdatePessoaDto } from './dto/update-pessoa.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -6,6 +12,8 @@ import { Repository } from 'typeorm';
 import { Pessoa } from './entities/pessoa.entity';
 import { HashingService } from '../auth/hashing/hashing.service';
 import { TokenPayloadDto } from '../auth/dto/tokenPayload.dto';
+import * as path from 'path';
+import * as fs from 'fs/promises';
 
 @Injectable()
 export class PessoasService {
@@ -96,5 +104,27 @@ export class PessoasService {
     if (pessoa.id !== tokenPayload.sub) this.throwForbiddenException();
 
     return await this.pessoaRepository.remove(pessoa);
+  }
+
+  async uploadPicture(file: Express.Multer.File, tokenPayload: TokenPayloadDto) {
+    if (file.size < 1024) throw new BadRequestException('Arquivo muito leve.');
+
+    const pessoa = await this.findOne(tokenPayload.sub);
+
+    const fileExtension = path.extname(file.originalname).toLocaleLowerCase().substring(1);
+
+    const fileName = `${tokenPayload.sub}.${fileExtension}`;
+
+    const fileFullPath = path.resolve(process.cwd(), 'pictures', fileName);
+
+    await fs.writeFile(fileFullPath, file.buffer);
+
+    console.log(fileFullPath);
+
+    pessoa.picture = fileName;
+
+    await this.pessoaRepository.save(pessoa);
+
+    return pessoa;
   }
 }
