@@ -1,7 +1,6 @@
 import { IsEmail } from 'class-validator';
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Recado } from '../../recados/entities/recado.entity';
-import { RoutePolicies } from '../../auth/enum/route-policies.enum';
 
 @Entity()
 export class Pessoa {
@@ -37,6 +36,6 @@ export class Pessoa {
   @Column({ default: true })
   active: boolean;
 
-  @Column({ type: 'simple-array', default: [] })
-  routePolicies: RoutePolicies[];
+  // @Column({ type: 'simple-array', default: [] })
+  // routePolicies: RoutePolicies[];
 }

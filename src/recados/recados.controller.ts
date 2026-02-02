@@ -6,10 +6,6 @@ import { PaginationDTO } from '../common/dto/pagination.dto';
 import { AuthTokenGuard } from '../auth/guards/auth-token.guard';
 import { TokenPayloadParam } from '../auth/params/token-payload.param';
 import { TokenPayloadDto } from '../auth/dto/tokenPayload.dto';
-import { RoutePolicyGuard } from '../auth/guards/route-policy.guard';
-import { SetRoutePolicy } from '../auth/decorators/set-route-policy.decorator';
-import { RoutePolicies } from '../auth/enum/route-policies.enum';
-import { AuthAndPolicyGuard } from '../auth/guards/auth-and-policy.guard';
 
 // @UseInterceptors(AuthTokenInterceptor)
 // @useGards(IsAdminGuard)
@@ -27,15 +23,13 @@ export class RecadosController {
     return this.recadosService.findOne(id);
   }
 
-  @UseGuards(AuthAndPolicyGuard)
-  @SetRoutePolicy(RoutePolicies.createRecado)
+  @UseGuards(AuthTokenGuard)
   @Post()
   create(@Body() createBodyDto: CreateRecadoDto, @TokenPayloadParam() tokenPayload: TokenPayloadDto) {
     return this.recadosService.create(createBodyDto, tokenPayload);
   }
 
-  @UseGuards(AuthTokenGuard, RoutePolicyGuard)
-  @SetRoutePolicy(RoutePolicies.updateRecado)
+  @UseGuards(AuthTokenGuard)
   @Patch(':id')
   update(
     @Param('id') id: number,
@@ -45,8 +39,7 @@ export class RecadosController {
     return this.recadosService.update(id, updateBodyDto, tokenPayload);
   }
 
-  @UseGuards(AuthTokenGuard, RoutePolicyGuard)
-  @SetRoutePolicy(RoutePolicies.deleteRecado)
+  @UseGuards(AuthTokenGuard)
   @Delete(':id')
   remove(@Param('id') id: number, @TokenPayloadParam() tokenPayload: TokenPayloadDto) {
     return this.recadosService.remove(id, tokenPayload);
