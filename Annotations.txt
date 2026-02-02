@@ -46,3 +46,8 @@ Role metadata -> Description of the data you're transmitting
   To get the metadata you set, you need to use the Reflector object inside the Guard "constructor(private readonly reflector: Reflector)", and then you get it passing:
     this.reflector.get(<key>, context.getHandler())
  
+
+Request With Files
+  You need to use the FileInterceptor(<name_you_put_on_the_Content-Dispotion>) in the params, and then you can get those file info
+
+  You can use some lib to validate the buffer, some are "file-type, image-type, sharp"
