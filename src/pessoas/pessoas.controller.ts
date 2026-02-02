@@ -11,7 +11,8 @@ import {
   UseInterceptors,
   UploadedFile,
   ParseFilePipeBuilder,
-  HttpStatus
+  HttpStatus,
+  BadRequestException
 } from '@nestjs/common';
 import { PessoasService } from './pessoas.service';
 import { CreatePessoaDto } from './dto/create-pessoa.dto';
@@ -83,6 +84,8 @@ export class PessoasController {
     file: Express.Multer.File,
     @TokenPayloadParam() tokenPayload: TokenPayloadDto
   ) {
+    if (file.size < 1024) throw new BadRequestException('Arquivo muito leve.');
+
     const fileExtension = path.extname(file.originalname).toLocaleLowerCase().substring(1);
 
     const fileName = `${tokenPayload.sub}.${fileExtension}`;
