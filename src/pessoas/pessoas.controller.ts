@@ -1,4 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, UseInterceptors, UploadedFile } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  Req,
+  UseInterceptors,
+  UploadedFile
+} from '@nestjs/common';
 import { PessoasService } from './pessoas.service';
 import { CreatePessoaDto } from './dto/create-pessoa.dto';
 import { UpdatePessoaDto } from './dto/update-pessoa.dto';
@@ -8,6 +20,8 @@ import { REQUEST_TOKEN_PAYLOAD_KEY } from '../auth/auth.constants';
 import { TokenPayloadParam } from '../auth/params/token-payload.param';
 import { TokenPayloadDto } from '../auth/dto/tokenPayload.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import * as path from 'path';
+import * as fs from 'fs/promises';
 
 @Controller('pessoas')
 export class PessoasController {
@@ -50,7 +64,17 @@ export class PessoasController {
   @UseGuards(AuthTokenGuard)
   @UseInterceptors(FileInterceptor('file'))
   @Post('upload-picture')
-  uploadPicture(@UploadedFile() file: Express.Multer.File, @TokenPayloadParam() tokenPayload: TokenPayloadDto) {
+  async uploadPicture(@UploadedFile() file: Express.Multer.File, @TokenPayloadParam() tokenPayload: TokenPayloadDto) {
+    const fileExtension = path.extname(file.originalname).toLocaleLowerCase().substring(1);
+
+    const fileName = `${tokenPayload.sub}.${fileExtension}`;
+
+    const fileFullPath = path.resolve(process.cwd(), 'pictures', fileName);
+
+    await fs.writeFile(fileFullPath, file.buffer);
+
+    console.log(fileFullPath);
+
     return {
       fieldname: file.fieldname,
       originalName: file.originalname,
