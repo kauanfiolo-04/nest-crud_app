@@ -51,3 +51,5 @@ Request With Files
   You need to use the FileInterceptor(<name_you_put_on_the_Content-Dispotion>) in the params, and then you can get those file info
 
   You can use some lib to validate the buffer, some are "file-type, image-type, sharp"
+
+  If your application is very big, you nedd to use some Static Server, and then you need to use the Serve Static module from nestjs

@@ -119,3 +119,7 @@ Content-Type: image/jpeg
 
 ------BoundaryDelimitadorHttp--
 ###
+
+### Ver foto
+GET {{baseUrl}}/pictures/1.jpeg
+###
