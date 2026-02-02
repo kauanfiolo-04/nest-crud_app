@@ -35,6 +35,7 @@ export class RecadosController {
   }
 
   @UseGuards(AuthTokenGuard, RoutePolicyGuard)
+  @SetRoutePolicy(RoutePolicies.updateRecado)
   @Patch(':id')
   update(
     @Param('id') id: number,
@@ -45,6 +46,7 @@ export class RecadosController {
   }
 
   @UseGuards(AuthTokenGuard, RoutePolicyGuard)
+  @SetRoutePolicy(RoutePolicies.deleteRecado)
   @Delete(':id')
   remove(@Param('id') id: number, @TokenPayloadParam() tokenPayload: TokenPayloadDto) {
     return this.recadosService.remove(id, tokenPayload);

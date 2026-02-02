@@ -18,8 +18,8 @@ Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
-  "texto": "Recado NOVO testando",
-  "paraId": 8
+  "texto": "Recado NOVO",
+  "paraId": 1
 }
 ###
 
@@ -35,7 +35,7 @@ Content-Type: application/json
 ###
 
 ###
-DELETE  {{baseUrl}}/recados/18
+DELETE  {{baseUrl}}/recados/1
 Authorization: Bearer {{authToken}}
 ###
 
@@ -58,10 +58,10 @@ POST {{baseUrl}}/pessoas/
 Content-Type: application/json
 
 {
-  "email": "kauan@emailA.com",
-  "nome": "KAUAN Fiolo",
+  "email": "kauanTeste@email.com",
+  "nome": "KAUAN TESTE Fiolo",
   "password": "123456",
-  "routePolicies": ["createRecado", "findOneRecado"]
+  "routePolicies": []
 }
 ###
 
@@ -76,7 +76,7 @@ Content-Type: application/json
 ###
 
 ###
-DELETE  {{baseUrl}}/pessoas/13
+DELETE  {{baseUrl}}/pessoas/2
 Authorization: Bearer {{authToken}}
 ###
 
@@ -90,7 +90,7 @@ POST {{baseUrl}}/auth/
 Content-Type: application/json
 
 {
-  "email": "kauan@emailteste.com",
+  "email": "kauan@email.com",
   "password": "123456"
 }
 ###

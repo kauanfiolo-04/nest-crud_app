@@ -9,7 +9,8 @@ export class RecadosUtils {
 
 @Injectable()
 export class RecadosUtilsMock {
-  invertString(str: string) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  invertString(__: string) {
     return 'BLA BLA bla';
   }
 }
