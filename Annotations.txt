@@ -53,3 +53,10 @@ Request With Files
   You can use some lib to validate the buffer, some are "file-type, image-type, sharp"
 
   If your application is very big, you nedd to use some Static Server, and then you need to use the Serve Static module from nestjs
+
+
+Testing
+  AAA:
+    - Arrange: configurar
+    - Act: fazer ação
+    - Assert: Conferir se essa ação foi esperada
