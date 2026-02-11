@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/unbound-method */
 import { Repository } from 'typeorm';
 import { PessoasService } from './pessoas.service';
 import { Pessoa } from './entities/pessoa.entity';
@@ -56,22 +57,41 @@ describe('Pessoas service', () => {
         password: '123456'
       };
 
-      const hashSpy = jest.spyOn(hashingService, 'hash').mockResolvedValue('HASH_DE_SENHA');
-      // const createSpy = jest.spyOn(pessoaRepository, 'create');
+      const passwordHash = 'HASH_DE_SENHA';
+
+      const novaPessoa = {
+        id: 1,
+        nome: createPessoaDto.nome,
+        email: createPessoaDto.email,
+        passwordHash
+      };
+
+      // Como o valor retornado por hashinService.hash é necessário, vamos simular este valor
+      const hashSpy = jest.spyOn(hashingService, 'hash').mockResolvedValue(passwordHash);
+
+      // Como a pessoa retornada por pessoaRepository.create é necessária em pessoaRepository.save, vamos simular este valor
+      jest.spyOn(pessoaRepository, 'create').mockReturnValue(novaPessoa as Pessoa);
 
       // Act
-      await pessoaService.create(createPessoaDto);
+      const result = await pessoaService.create(createPessoaDto);
 
       // Assert
+      // O método hashinService.hash foi chamado com createPessoaDto.password?
       expect(hashSpy).toHaveBeenCalledWith(createPessoaDto.password);
 
-      // Posso usar o createSpy pra n dar erro no eslint
-      // eslint-disable-next-line @typescript-eslint/unbound-method
+      // O método pessoaRepository.create foi chamado com os dados da nova pessoa com o hash de senha gerado por hashingService.hash ?
+      // Posso criar e usar o createSpy pra n dar erro no eslint
       expect(pessoaRepository.create).toHaveBeenCalledWith({
         nome: createPessoaDto.nome,
         email: createPessoaDto.email,
-        passwordHash: 'HASH_DE_SENHA'
+        passwordHash
       });
+
+      // O método pessoaRepository.save foi chamado com os dados da nova pessoa gerada por pessoaRepository.create ?
+      expect(pessoaRepository.save).toHaveBeenCalledWith(novaPessoa);
+
+      // o resultado do método retornou a nova pessoa criada?
+      expect(result).toEqual(novaPessoa);
     });
   });
 });
