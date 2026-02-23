@@ -6,6 +6,7 @@ import { HashingService } from '../auth/hashing/hashing.service';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { CreatePessoaDto } from './dto/create-pessoa.dto';
+import { ConflictException, NotFoundException } from '@nestjs/common';
 
 describe('Pessoas service', () => {
   let pessoaService: PessoasService;
@@ -20,7 +21,8 @@ describe('Pessoas service', () => {
           provide: getRepositoryToken(Pessoa),
           useValue: {
             create: jest.fn(),
-            save: jest.fn()
+            save: jest.fn(),
+            findOneBy: jest.fn()
           }
         },
         {
@@ -92,6 +94,40 @@ describe('Pessoas service', () => {
 
       // o resultado do método retornou a nova pessoa criada?
       expect(result).toEqual(novaPessoa);
+    });
+
+    it('deve lançar ConflictException quando email já existe', async () => {
+      jest.spyOn(pessoaRepository, 'save').mockRejectedValue({ code: '23505' });
+
+      await expect(pessoaService.create({} as CreatePessoaDto)).rejects.toThrow(ConflictException);
+    });
+
+    it('deve lançar erro generico', async () => {
+      jest.spyOn(pessoaRepository, 'save').mockRejectedValue(new Error('Erro genérico'));
+
+      await expect(pessoaService.create({} as CreatePessoaDto)).rejects.toThrow(new Error('Erro genérico'));
+    });
+  });
+
+  describe('findOne', () => {
+    it('deve retornar uma pessoas se a pessoa for encontrada', async () => {
+      const pessoaId = 1;
+      const pessoaEncontrada = {
+        id: pessoaId,
+        nome: 'KAUAN Fiolo',
+        email: 'kauan@email.com',
+        passwordHash: '123456'
+      };
+
+      jest.spyOn(pessoaRepository, 'findOneBy').mockResolvedValue(pessoaEncontrada as Pessoa);
+
+      const result = await pessoaService.findOne(pessoaId);
+
+      expect(result).toEqual(pessoaEncontrada);
+    });
+
+    it('deve retornar erro', async () => {
+      await expect(pessoaService.findOne(1)).rejects.toThrow(NotFoundException);
     });
   });
 });
