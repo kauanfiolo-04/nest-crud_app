@@ -7,6 +7,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { CreatePessoaDto } from './dto/create-pessoa.dto';
 import { ConflictException, NotFoundException } from '@nestjs/common';
+import { TokenPayloadDto } from '../auth/dto/tokenPayload.dto';
+import { UpdatePessoaDto } from './dto/update-pessoa.dto';
 
 describe('Pessoas service', () => {
   let pessoasService: PessoasService;
@@ -23,7 +25,8 @@ describe('Pessoas service', () => {
             create: jest.fn(),
             save: jest.fn(),
             findOneBy: jest.fn(),
-            find: jest.fn()
+            find: jest.fn(),
+            preload: jest.fn()
           }
         },
         {
@@ -153,6 +156,34 @@ describe('Pessoas service', () => {
           id: 'desc'
         }
       });
+    });
+  });
+
+  describe('update', () => {
+    it('deve atualizar uma pessoa se for autorizado', async () => {
+      // Arrange
+      const pessoaId = 1;
+      const updatePessoaDto = { nome: 'Joana', password: '654321' };
+      const tokenPayload = { sub: pessoaId };
+      const passwordHash = 'HASHDESENHA';
+      const updatedPessoa = { id: pessoaId, nome: 'Joana', passwordHash };
+
+      jest.spyOn(hashingService, 'hash').mockResolvedValue(passwordHash);
+      jest.spyOn(pessoaRepository, 'preload').mockResolvedValue(updatedPessoa as any);
+      jest.spyOn(pessoaRepository, 'save').mockResolvedValue(updatedPessoa as any);
+
+      // Act
+      const result = await pessoasService.update(pessoaId, updatePessoaDto, tokenPayload as any);
+
+      // Assert
+      expect(result).toEqual(updatedPessoa);
+      expect(hashingService.hash).toHaveBeenCalledWith(updatePessoaDto.password);
+      expect(pessoaRepository.preload).toHaveBeenCalledWith({
+        id: pessoaId,
+        nome: updatedPessoa.nome,
+        passwordHash
+      });
+      expect(pessoaRepository.save).toHaveBeenCalledWith(updatedPessoa);
     });
   });
 });
