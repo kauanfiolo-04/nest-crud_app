@@ -117,8 +117,6 @@ export class PessoasService {
 
     await fs.writeFile(fileFullPath, file.buffer);
 
-    console.log(fileFullPath);
-
     pessoa.picture = fileName;
 
     await this.pessoaRepository.save(pessoa);
