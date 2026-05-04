@@ -97,9 +97,7 @@ export class PessoasService {
   }
 
   async remove(id: number, tokenPayload: TokenPayloadDto) {
-    const pessoa = await this.pessoaRepository.findOneBy({ id });
-
-    if (!pessoa) this.throwNotFoundException();
+    const pessoa = await this.findOne(id);
 
     if (pessoa.id !== tokenPayload.sub) this.throwForbiddenException();
 

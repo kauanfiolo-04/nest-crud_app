@@ -24,7 +24,8 @@ describe('Pessoas service', () => {
             save: jest.fn(),
             findOneBy: jest.fn(),
             find: jest.fn(),
-            preload: jest.fn()
+            preload: jest.fn(),
+            remove: jest.fn()
           }
         },
         {
@@ -213,6 +214,58 @@ describe('Pessoas service', () => {
       await expect(pessoasService.update(pessoaId, updatePessoaDto, tokenPayload as any)).rejects.toThrow(
         NotFoundException
       );
+    });
+  });
+
+  describe('remove', () => {
+    it('deve remover uma pessoa se autorizado', async () => {
+      // Arrange
+      const pessoaId = 1;
+      const tokenPayload = { sub: pessoaId };
+      const existingPessoa = { id: pessoaId, nome: 'Jane Doe' };
+
+      // findOne do service vai retornar a pessoa existe
+      jest.spyOn(pessoasService, 'findOne').mockResolvedValue(existingPessoa as Pessoa);
+
+      // o metódo remove do repositório também vai retornar a pessoa existente
+      jest.spyOn(pessoaRepository, 'remove').mockResolvedValue(existingPessoa as Pessoa);
+
+      // Act
+      const result = await pessoasService.remove(pessoaId, tokenPayload as any);
+
+      // Assert
+      // Espero que findOne do pessoaService seja chamado com o Id da pessoa
+      expect(pessoasService.findOne).toHaveBeenCalledWith(pessoaId);
+
+      // Espero que o remove do repositório seja chamado com a pessoa existente
+      expect(pessoaRepository.remove).toHaveBeenCalledWith(existingPessoa);
+      // Espero que a pessoa apagada seja retornada
+      expect(result).toEqual(existingPessoa);
+    });
+
+    it('deve lancar ForbiddenException se nao autorizado', async () => {
+      // Arrange
+      const pessoaId = 1;
+      const tokenPayload = { sub: 2 };
+      const existingPessoa = { id: pessoaId, nome: 'Jane Doe' };
+
+      // findOne seja chamado com pessoa existente
+      jest.spyOn(pessoasService, 'findOne').mockResolvedValue(existingPessoa as Pessoa);
+
+      // Espero que o servico rejeite porque o usuario é diferente da pessoa
+      await expect(pessoasService.remove(pessoaId, tokenPayload as any)).rejects.toThrow(ForbiddenException);
+    });
+
+    it('deve lancar NotFoundException se a pessoa nao for encontrada', async () => {
+      // Arrange
+      const pessoaId = 1;
+      const tokenPayload = { sub: pessoaId };
+
+      // Simula que preload retornou null
+      jest.spyOn(pessoasService, 'findOne').mockRejectedValue(new NotFoundException());
+
+      // Act e Assert
+      await expect(pessoasService.remove(pessoaId, tokenPayload as any)).rejects.toThrow(NotFoundException);
     });
   });
 });
