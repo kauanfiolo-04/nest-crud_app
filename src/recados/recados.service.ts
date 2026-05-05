@@ -19,7 +19,7 @@ export class RecadosService {
     @Inject(recadosConfig.KEY)
     private readonly recadosConfiguration: ConfigType<typeof recadosConfig>
   ) {
-    console.log(this.recadosConfiguration);
+    // console.log(this.recadosConfiguration);
   }
 
   throwNotFoundException(): never {
