@@ -60,3 +60,6 @@ Testing
     - Arrange: configurar
     - Act: fazer ação
     - Assert: Conferir se essa ação foi esperada
+
+    - toBe: valor primitivo
+    - toEqual: objeto ou array 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpStatus, INestApplication } from '@nestjs/common';
@@ -13,6 +14,7 @@ import globalConfig from '../src/global-config/global.config';
 import { PessoasModule } from '../src/pessoas/pessoas.module';
 import { RecadosModule } from '../src/recados/recados.module';
 import appConfig from '../src/app/config/app.config';
+import { CreatePessoaDto } from '../src/pessoas/dto/create-pessoa.dto';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication<App>;
@@ -56,7 +58,7 @@ describe('AppController (e2e)', () => {
 
   describe('/pessoas (POST)', () => {
     it('deve criar uma pessoa com sucesso', async () => {
-      const createPessoaDTO = {
+      const createPessoaDTO: CreatePessoaDto = {
         email: 'teste_e2e@email.com',
         password: '123456',
         nome: 'Test_E2E'
@@ -77,6 +79,38 @@ describe('AppController (e2e)', () => {
         picture: '',
         id: expect.any(Number)
       });
+    });
+
+    it('deve gerar um erro de e-mail já existente', async () => {
+      const createPessoaDTO: CreatePessoaDto = {
+        email: 'teste_e2e@email.com',
+        password: '123456',
+        nome: 'Test_E2E'
+      };
+
+      await request(app.getHttpServer()).post('/pessoas').send(createPessoaDTO).expect(HttpStatus.CREATED);
+
+      const response = await request(app.getHttpServer())
+        .post('/pessoas')
+        .send(createPessoaDTO)
+        .expect(HttpStatus.CONFLICT);
+
+      expect(response.body.message).toBe('Email já cadastrado');
+    });
+
+    it('deve gerar erro de senha curta', async () => {
+      const createPessoaDTO: CreatePessoaDto = {
+        email: 'teste_e2e@email.com',
+        nome: 'Test_E2E',
+        password: '123'
+      };
+
+      const response = await request(app.getHttpServer())
+        .post('/pessoas')
+        .send(createPessoaDTO)
+        .expect(HttpStatus.BAD_REQUEST);
+
+      expect(response.body.message).toContain('password must be longer than or equal to 5 characters');
     });
   });
 });
