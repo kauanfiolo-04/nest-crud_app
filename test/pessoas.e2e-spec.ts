@@ -15,9 +15,11 @@ import { PessoasModule } from '../src/pessoas/pessoas.module';
 import { RecadosModule } from '../src/recados/recados.module';
 import appConfig from '../src/app/config/app.config';
 import { CreatePessoaDto } from '../src/pessoas/dto/create-pessoa.dto';
+import { createUserAndLogin } from './helpers';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication<App>;
+  let accessToken: string;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -50,6 +52,8 @@ describe('AppController (e2e)', () => {
     appConfig(app);
 
     await app.init();
+
+    accessToken = await createUserAndLogin(app);
   });
 
   afterEach(async () => {
@@ -111,6 +115,56 @@ describe('AppController (e2e)', () => {
         .expect(HttpStatus.BAD_REQUEST);
 
       expect(response.body.message).toContain('password must be longer than or equal to 5 characters');
+    });
+  });
+
+  describe('/pessoas/:id (GET)', () => {
+    it('deve Unauthorized quando usuário nao está logado', async () => {
+      const createPessoaDTO: CreatePessoaDto = {
+        email: 'teste_e2e@email.com',
+        password: '123456',
+        nome: 'Test_E2E'
+      };
+
+      const pessoaResponse = await request(app.getHttpServer())
+        .post('/pessoas')
+        .send(createPessoaDTO)
+        .expect(HttpStatus.CREATED);
+
+      const response = await request(app.getHttpServer())
+        .get(`/pessoas/${pessoaResponse.body.id}`)
+        .expect(HttpStatus.UNAUTHORIZED);
+
+      expect(response.body.message).toBe('Não logado!');
+    });
+
+    it('deve retonar a Pessoa quando usuário está logado', async () => {
+      const createPessoaDTO: CreatePessoaDto = {
+        email: 'teste_e2e@email.com',
+        password: '123456',
+        nome: 'Test_E2E'
+      };
+
+      const pessoaResponse = await request(app.getHttpServer())
+        .post('/pessoas')
+        .send(createPessoaDTO)
+        .expect(HttpStatus.CREATED);
+
+      const response = await request(app.getHttpServer())
+        .get(`/pessoas/${pessoaResponse.body.id}`)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .expect(HttpStatus.OK);
+
+      expect(response.body).toEqual({
+        email: createPessoaDTO.email,
+        passwordHash: expect.any(String),
+        nome: createPessoaDTO.nome,
+        active: true,
+        createdAt: expect.any(String),
+        updatedAt: expect.any(String),
+        picture: '',
+        id: expect.any(Number)
+      });
     });
   });
 });
