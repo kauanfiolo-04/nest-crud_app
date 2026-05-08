@@ -4,6 +4,7 @@ import { App } from 'supertest/types';
 import { Request } from 'express';
 import request from 'supertest';
 import { CreatePessoaDto } from '../src/pessoas/dto/create-pessoa.dto';
+import { Pessoa } from '../src/pessoas/entities/pessoa.entity';
 
 export const login = async (app: INestApplication<App>, email: string, password: string) => {
   const response = await request(app.getHttpServer()).post('/auth').send({ email, password });
@@ -13,12 +14,15 @@ export const login = async (app: INestApplication<App>, email: string, password:
 
 export const createUserAndLogin = async (app: INestApplication<App>) => {
   const createPessoaDTO: CreatePessoaDto = {
-    email: 'teste_e2e@email.com',
-    password: '123456',
-    nome: 'Test_E2E'
+    email: 'anyEmail@email.com',
+    password: 'any123',
+    nome: 'anyName'
   };
 
-  await request(app.getHttpServer()).post('/pessoas').send(createPessoaDTO);
+  const createResponse = await request(app.getHttpServer()).post('/pessoas').send(createPessoaDTO);
+  const pessoa = createResponse.body as Pessoa;
 
-  return login(app, createPessoaDTO.email, createPessoaDTO.password);
+  const accessToken = await login(app, createPessoaDTO.email, createPessoaDTO.password);
+
+  return { pessoa, accessToken };
 };

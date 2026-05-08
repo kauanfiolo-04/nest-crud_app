@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Test, TestingModule } from '@nestjs/testing';
@@ -16,10 +17,12 @@ import { RecadosModule } from '../src/recados/recados.module';
 import appConfig from '../src/app/config/app.config';
 import { CreatePessoaDto } from '../src/pessoas/dto/create-pessoa.dto';
 import { createUserAndLogin } from './helpers';
+import { UpdatePessoaDto } from '../src/pessoas/dto/update-pessoa.dto';
+import { Pessoa } from '../src/pessoas/entities/pessoa.entity';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication<App>;
-  let accessToken: string;
+  let userObj;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -53,7 +56,7 @@ describe('AppController (e2e)', () => {
 
     await app.init();
 
-    accessToken = await createUserAndLogin(app);
+    userObj = await createUserAndLogin(app);
   });
 
   afterEach(async () => {
@@ -139,32 +142,79 @@ describe('AppController (e2e)', () => {
     });
 
     it('deve retonar a Pessoa quando usuário está logado', async () => {
-      const createPessoaDTO: CreatePessoaDto = {
-        email: 'teste_e2e@email.com',
-        password: '123456',
-        nome: 'Test_E2E'
+      // Arrange
+      const { pessoa, accessToken } = userObj;
+
+      // Act
+      const response = await request(app.getHttpServer())
+        .get(`/pessoas/${pessoa.id}`)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .expect(HttpStatus.OK);
+
+      // Assert
+      expect(response.body).toEqual(pessoa);
+    });
+  });
+
+  describe('/pessoas/:id (PATCH)', () => {
+    it('deve ATUALIZAR pessoa', async () => {
+      const { pessoa, accessToken } = userObj;
+
+      const updatePessoaDTO: UpdatePessoaDto = {
+        nome: 'BATATA'
       };
 
-      const pessoaResponse = await request(app.getHttpServer())
-        .post('/pessoas')
-        .send(createPessoaDTO)
-        .expect(HttpStatus.CREATED);
-
       const response = await request(app.getHttpServer())
-        .get(`/pessoas/${pessoaResponse.body.id}`)
+        .patch(`/pessoas/${pessoa.id}`)
+        .send(updatePessoaDTO)
         .set('Authorization', `Bearer ${accessToken}`)
         .expect(HttpStatus.OK);
 
       expect(response.body).toEqual({
-        email: createPessoaDTO.email,
-        passwordHash: expect.any(String),
-        nome: createPessoaDTO.nome,
-        active: true,
-        createdAt: expect.any(String),
-        updatedAt: expect.any(String),
-        picture: '',
-        id: expect.any(Number)
+        ...pessoa,
+        nome: updatePessoaDTO.nome,
+        updatedAt: expect.any(String)
       });
+    });
+
+    it('deve dar NotFoundException quando user nao existente', async () => {
+      const updatePessoaDTO: UpdatePessoaDto = {
+        nome: 'Test_E2E'
+      };
+
+      const response = await request(app.getHttpServer())
+        .patch('/pessoas/9999')
+        .send(updatePessoaDTO)
+        .set('Authorization', `Bearer ${userObj.accessToken}`)
+        .expect(HttpStatus.NOT_FOUND);
+
+      expect(response.body.message).toBe('Pessoa não econtrada');
+    });
+  });
+
+  describe('/pessoas/:id (DELETE)', () => {
+    it('deve DELETAR pessoa ', async () => {
+      const { pessoa, accessToken } = userObj;
+
+      const response = await request(app.getHttpServer())
+        .delete(`/pessoas/${pessoa.id}`)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .expect(HttpStatus.OK);
+
+      expect(response.body).toEqual((({ id, ...rest }) => rest as Omit<Pessoa, 'id'>)(pessoa));
+    });
+
+    it('deve dar NotFoundException quando user nao existente', async () => {
+      const { accessToken } = userObj;
+
+      const response = await request(app.getHttpServer())
+        .delete('/pessoas/9999')
+        .set('Authorization', `Bearer ${userObj.accessToken}`)
+        .expect(HttpStatus.NOT_FOUND);
+
+      expect(response.body.message).toBe('Pessoa não econtrada');
     });
   });
 });
+
+(() => {})();
