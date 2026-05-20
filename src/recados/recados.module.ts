@@ -9,12 +9,14 @@ import { RegexFactory } from '../common/regex/regex.factory';
 import { ConfigModule } from '@nestjs/config';
 import recadosConfig from './recados.config';
 import { Pessoa } from '../pessoas/entities/pessoa.entity';
+import { EmailModule } from '../email/email.module';
 
 @Module({
   imports: [
     ConfigModule.forFeature(recadosConfig),
     TypeOrmModule.forFeature([Recado, Pessoa]),
-    forwardRef(() => PessoasModule)
+    forwardRef(() => PessoasModule),
+    EmailModule
     // MyDinamicModule.register({
     //   apiKey: 'Aqui vem a chave de API',
     //   apiUrl: 'https://bla.bla.com'

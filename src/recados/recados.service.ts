@@ -1,4 +1,4 @@
-import { ForbiddenException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { Recado } from './entities/recado.entity';
 import { CreateRecadoDto } from './dto/create-recado.dto';
 import { UpdateRecadoDto } from './dto/update-recado.dto';
@@ -6,9 +6,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PessoasService } from '../pessoas/pessoas.service';
 import { PaginationDTO } from '../common/dto/pagination.dto';
-import { type ConfigType } from '@nestjs/config';
-import recadosConfig from './recados.config';
+// import { type ConfigType } from '@nestjs/config';
+// import recadosConfig from './recados.config';
 import { TokenPayloadDto } from '../auth/dto/tokenPayload.dto';
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class RecadosService {
@@ -16,8 +17,9 @@ export class RecadosService {
     @InjectRepository(Recado)
     private readonly recadoRepository: Repository<Recado>,
     private readonly pessoasService: PessoasService,
-    @Inject(recadosConfig.KEY)
-    private readonly recadosConfiguration: ConfigType<typeof recadosConfig>
+    private readonly emailService: EmailService
+    // @Inject(recadosConfig.KEY)
+    // private readonly recadosConfiguration: ConfigType<typeof recadosConfig>
   ) {
     // console.log(this.recadosConfiguration);
   }
@@ -94,6 +96,12 @@ export class RecadosService {
     const recado = this.recadoRepository.create(novoRecado);
 
     await this.recadoRepository.save(recado);
+
+    await this.emailService.sendEmail(
+      para.email,
+      `Você recebeu um recado de "${de.nome}" <${de.email}>`,
+      createRecadoDto.texto
+    );
 
     return {
       ...recado,
