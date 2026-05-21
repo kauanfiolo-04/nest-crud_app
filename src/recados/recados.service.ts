@@ -10,6 +10,7 @@ import { PaginationDTO } from '../common/dto/pagination.dto';
 // import recadosConfig from './recados.config';
 import { TokenPayloadDto } from '../auth/dto/tokenPayload.dto';
 import { EmailService } from '../email/email.service';
+import { ResponseRecadoDto } from './dto/response-recado.dto';
 
 @Injectable()
 export class RecadosService {
@@ -32,7 +33,7 @@ export class RecadosService {
     throw new ForbiddenException('Esse recado não é seu!');
   }
 
-  async findAll(paginationDto?: PaginationDTO) {
+  async findAll(paginationDto?: PaginationDTO): Promise<ResponseRecadoDto[]> {
     const recados = await this.recadoRepository.find({
       take: paginationDto?.limit ?? 10,
       skip: paginationDto?.offset ?? 0,
@@ -55,7 +56,7 @@ export class RecadosService {
     return recados;
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<ResponseRecadoDto> {
     const recado = await this.recadoRepository.findOne({
       where: { id },
       relations: ['de', 'para'],
@@ -76,7 +77,7 @@ export class RecadosService {
     return recado;
   }
 
-  async create(createRecadoDto: CreateRecadoDto, tokenPayload: TokenPayloadDto) {
+  async create(createRecadoDto: CreateRecadoDto, tokenPayload: TokenPayloadDto): Promise<ResponseRecadoDto> {
     const { paraId } = createRecadoDto;
 
     // Encontrar a pessoa que esta criando o recado
@@ -116,7 +117,11 @@ export class RecadosService {
     };
   }
 
-  async update(id: number, updateRecadoDto: UpdateRecadoDto, tokenPayload: TokenPayloadDto) {
+  async update(
+    id: number,
+    updateRecadoDto: UpdateRecadoDto,
+    tokenPayload: TokenPayloadDto
+  ): Promise<ResponseRecadoDto> {
     const recado = await this.findOne(id);
 
     if (recado.de.id !== tokenPayload.sub) this.throwForbiddenException();
@@ -129,13 +134,15 @@ export class RecadosService {
     return recado;
   }
 
-  async remove(id: number, tokenPayload: TokenPayloadDto) {
+  async remove(id: number, tokenPayload: TokenPayloadDto): Promise<ResponseRecadoDto> {
     const recado = await this.findOne(id);
 
     if (!recado) this.throwNotFoundException();
 
     if (recado.de.id !== tokenPayload.sub) this.throwForbiddenException();
 
-    return this.recadoRepository.remove(recado);
+    await this.recadoRepository.delete(recado.id);
+
+    return recado;
   }
 }

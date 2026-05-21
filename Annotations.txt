@@ -63,3 +63,6 @@ Testing
 
     - toBe: valor primitivo
     - toEqual: objeto ou array 
+
+Swagger:
+    Add to "nest-cli.json" in the compilerOptions key: `"plugins": ["@nestjs/swagger/plugin"]`
