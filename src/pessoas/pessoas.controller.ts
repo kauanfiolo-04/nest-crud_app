@@ -19,7 +19,7 @@ import { AuthTokenGuard } from '../auth/guards/auth-token.guard';
 import { TokenPayloadParam } from '../auth/params/token-payload.param';
 import { TokenPayloadDto } from '../auth/dto/tokenPayload.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes } from '@nestjs/swagger';
 
 @Controller('pessoas')
 export class PessoasController {
@@ -65,6 +65,18 @@ export class PessoasController {
 
   @UseGuards(AuthTokenGuard)
   @ApiBearerAuth()
+  @ApiConsumes('multipart/form-data') // Indica que o endpoint consome dados multipart
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary'
+        }
+      }
+    }
+  }) // Indica que esperamos um arquivo no campo file e o formato é binário
   @UseInterceptors(FileInterceptor('file'))
   @Post('upload-picture')
   uploadPicture(

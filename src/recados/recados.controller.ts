@@ -1,4 +1,15 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  UseGuards
+} from '@nestjs/common';
 import { RecadosService } from './recados.service';
 import { CreateRecadoDto } from './dto/create-recado.dto';
 import { UpdateRecadoDto } from './dto/update-recado.dto';
@@ -42,6 +53,14 @@ export class RecadosController {
   @UseGuards(AuthTokenGuard)
   @ApiBearerAuth()
   @Post()
+  @ApiOperation({ summary: 'Criar um novo recado' })
+  @ApiResponse({ status: 201, description: 'Recado criado com sucesso', type: [ResponseRecadoDto] })
+  @ApiResponse({
+    status: 400,
+    description: 'Dados inválidos',
+    type: BadRequestException,
+    example: new BadRequestException('Error message').getResponse()
+  })
   create(@Body() createBodyDto: CreateRecadoDto, @TokenPayloadParam() tokenPayload: TokenPayloadDto) {
     return this.recadosService.create(createBodyDto, tokenPayload);
   }
