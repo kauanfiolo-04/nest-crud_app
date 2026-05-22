@@ -7,6 +7,7 @@ import { AuthTokenGuard } from '../auth/guards/auth-token.guard';
 import { TokenPayloadParam } from '../auth/params/token-payload.param';
 import { TokenPayloadDto } from '../auth/dto/tokenPayload.dto';
 import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
+import { ResponseRecadoDto } from './dto/response-recado.dto';
 
 // @UseInterceptors(AuthTokenInterceptor)
 // @useGards(IsAdminGuard)
@@ -28,7 +29,7 @@ export class RecadosController {
     example: 10,
     description: 'Limite de items por página'
   })
-  // @ApiResponse({ status: 200, description: 'Recados retornados com sucesso.' }) // Resposta examplo
+  @ApiResponse({ status: 200, description: 'Recados retornados com sucesso.', type: [ResponseRecadoDto] }) // Resposta examplo
   findAll(@Query() paginationDto: PaginationDTO) {
     return this.recadosService.findAll(paginationDto);
   }
