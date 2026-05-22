@@ -6,7 +6,7 @@ import { PaginationDTO } from '../common/dto/pagination.dto';
 import { AuthTokenGuard } from '../auth/guards/auth-token.guard';
 import { TokenPayloadParam } from '../auth/params/token-payload.param';
 import { TokenPayloadDto } from '../auth/dto/tokenPayload.dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
 
 // @UseInterceptors(AuthTokenInterceptor)
 // @useGards(IsAdminGuard)
@@ -15,6 +15,20 @@ export class RecadosController {
   constructor(private readonly recadosService: RecadosService) {}
 
   @Get()
+  @ApiOperation({ summary: 'Obter todos os recados com paginação' }) // desc do endpoint
+  @ApiQuery({
+    name: 'offset',
+    required: false,
+    example: 1,
+    description: 'Items a pular'
+  }) // Parâmetros da querys
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    example: 10,
+    description: 'Limite de items por página'
+  })
+  // @ApiResponse({ status: 200, description: 'Recados retornados com sucesso.' }) // Resposta examplo
   findAll(@Query() paginationDto: PaginationDTO) {
     return this.recadosService.findAll(paginationDto);
   }
