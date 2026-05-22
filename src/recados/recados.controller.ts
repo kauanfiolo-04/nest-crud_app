@@ -6,6 +6,7 @@ import { PaginationDTO } from '../common/dto/pagination.dto';
 import { AuthTokenGuard } from '../auth/guards/auth-token.guard';
 import { TokenPayloadParam } from '../auth/params/token-payload.param';
 import { TokenPayloadDto } from '../auth/dto/tokenPayload.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 // @UseInterceptors(AuthTokenInterceptor)
 // @useGards(IsAdminGuard)
@@ -24,12 +25,14 @@ export class RecadosController {
   }
 
   @UseGuards(AuthTokenGuard)
+  @ApiBearerAuth()
   @Post()
   create(@Body() createBodyDto: CreateRecadoDto, @TokenPayloadParam() tokenPayload: TokenPayloadDto) {
     return this.recadosService.create(createBodyDto, tokenPayload);
   }
 
   @UseGuards(AuthTokenGuard)
+  @ApiBearerAuth()
   @Patch(':id')
   update(
     @Param('id') id: number,
@@ -40,6 +43,7 @@ export class RecadosController {
   }
 
   @UseGuards(AuthTokenGuard)
+  @ApiBearerAuth()
   @Delete(':id')
   remove(@Param('id') id: number, @TokenPayloadParam() tokenPayload: TokenPayloadDto) {
     return this.recadosService.remove(id, tokenPayload);
